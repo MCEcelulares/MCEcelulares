@@ -11,7 +11,7 @@ export const ProdutoCardAdm = ({ produto }: ProdutoCardAdmProps) => {
   const router = useRouter();
 
   return (
-    <div className="bg-white rounded-[23px] overflow-hidden flex flex-col border-2 p-[1px] m-[10px] border-purple-800">
+    <div className="bg-white rounded-[23px] overflow-hidden flex flex-col border-2 p-[1px] m-[10px] border-purple-800" data-testid="produto-card">
 
       <div
         onClick={() => router.push(`/admin/produtos/edicao?id=${produto.id_produto}`)}

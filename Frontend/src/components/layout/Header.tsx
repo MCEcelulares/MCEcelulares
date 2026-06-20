@@ -66,7 +66,7 @@ export const Header = () => {
             </Link>
             <LogoutButton />
             {user?.admin && (
-              <Link href="/admin" className="flex items-center gap-2 transition-transform group hover:text-gray-200">
+              <Link href="/admin" className="flex items-center gap-2 transition-transform group hover:text-gray-200" data-testid="admin-button">
                 <Icon name="faUsersGear" className="w-5 text-white group-hover:text-gray-200" size="xl" />
               </Link>
             )}
@@ -106,9 +106,9 @@ export const Header = () => {
             { href: "/produtos", icon: "faMobileScreen", label: "Produtos" },
             ...(isAuthenticated
               ? [
-                  { href: "/carrinho", icon: "faCartShopping", label: "Carrinho" },
-                  { href: "/pedidos", icon: "faBox", label: "Pedidos" },
-                ]
+                { href: "/carrinho", icon: "faCartShopping", label: "Carrinho" },
+                { href: "/pedidos", icon: "faBox", label: "Pedidos" },
+              ]
               : []),
             { href: "/contato", icon: "faPhone", label: "Contato" },
           ].map(({ href, icon, label }) => (

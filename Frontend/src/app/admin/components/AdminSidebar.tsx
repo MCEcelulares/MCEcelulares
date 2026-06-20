@@ -9,9 +9,8 @@ export const AdminSidebar = () => {
 
   const linkClass = (href: string) => {
     const isActive = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
-    return `flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all ${
-      isActive ? 'bg-white text-[#5714d7] shadow-md' : 'text-white/80 hover:bg-white/10 hover:text-white'
-    }`;
+    return `flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all ${isActive ? 'bg-white text-[#5714d7] shadow-md' : 'text-white/80 hover:bg-white/10 hover:text-white'
+      }`;
   };
 
   return (
@@ -27,7 +26,7 @@ export const AdminSidebar = () => {
           Dashboard
         </Link>
 
-        <Link href="/admin/produtos" className={linkClass('/admin/produtos')}>
+        <Link href="/admin/produtos" className={linkClass('/admin/produtos')} data-testid="produto-button">
           <Icon name="faMobileScreen" className="w-4" />
           Produtos
         </Link>

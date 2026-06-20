@@ -6,6 +6,9 @@ export default class LoginPage {
     private readonly inputEmail: Locator;
     private readonly inputPassword: Locator;
     private readonly accessButton: Locator;
+    private readonly swalTitle: Locator;
+    private readonly swalMessage: Locator;
+    private readonly swalConfirmButton: Locator;
 
     constructor(page: Page) {
         this.page = page
@@ -13,6 +16,9 @@ export default class LoginPage {
         this.inputEmail = page.getByTestId('input-email-login')
         this.inputPassword = page.getByTestId('input-password-login')
         this.accessButton = page.getByTestId("access-button-login")
+        this.swalTitle = page.locator('.swal2-title')
+        this.swalMessage = page.locator('.swal2-html-container')
+        this.swalConfirmButton = page.locator('.swal2-confirm')
     }
 
     async visit() {
@@ -29,6 +35,12 @@ export default class LoginPage {
 
     async loginSuccess() {
         await expect(this.page).toHaveURL("/")
+    }
+
+    async verifyErrorMessage() {
+        await expect(this.swalMessage).toBeVisible()
+        await expect(this.swalTitle).toHaveText("Erro ao entrar")
+        await this.swalConfirmButton.click()
     }
 
     async errorMessage(message: string) {

@@ -14,7 +14,7 @@ export const MarcaDropdownAdm = ({ value, onChange, id_categoria }: MarcaDropdow
 
     useEffect(() => {
         execute(id_categoria ? Number(id_categoria) : undefined);
-    }, [id_categoria,execute]);
+    }, [id_categoria, execute]);
 
     if (error) return null;
 
@@ -35,6 +35,7 @@ export const MarcaDropdownAdm = ({ value, onChange, id_categoria }: MarcaDropdow
                 bg-no-repeat bg-[right_14px_center]
                 transition-colors duration-150
                 disabled:cursor-not-allowed disabled:opacity-50"
+            data-testid="select-marca-produto"
         >
             <option value="" hidden>
                 {loading ? 'Carregando...' : 'Todas as marcas'}

@@ -34,6 +34,7 @@ export const CategoriaDropdownAdm = ({ value, onChange }: CategoriaDropdownAdmPr
                 bg-no-repeat bg-[right_14px_center]
                 transition-colors duration-150
                 disabled:cursor-not-allowed disabled:opacity-50"
+            data-testid="select-categoria-produto"
         >
             <option value="" hidden>
                 {loading ? 'Carregando...' : 'Todas as categorias'}
