@@ -14,7 +14,7 @@ test.describe("Página de Login", () => {
         const loginPage = new LoginPage(page)
 
         await loginPage.visit()
-        await loginPage.login("rafaelfrossard10@gmail.com", "@Rafael1")
+        await loginPage.login("rafaelfrossarderrado@gmail.com", "@Rafael1")
         await loginPage.errorMessage("Erro ao entrar")
     })
 })

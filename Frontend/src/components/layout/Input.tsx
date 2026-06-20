@@ -11,6 +11,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     mask?: string;
     variant?: InputVariant;
     onAccept?: (value: string) => void;
+    "data-testid"?: string;
 }
 
 const variantStyles: Record<InputVariant, string> = {
@@ -26,6 +27,7 @@ export const Input = ({
     mask,
     variant = "gray",
     onAccept,
+    "data-testid": dataTestId,
     ...props
 }: InputProps) => {
     return (
@@ -35,6 +37,7 @@ export const Input = ({
             placeholder={placeholder}
             className={className ?? variantStyles[variant]}
             onAccept={onAccept}
+            data-testid={dataTestId}
             {...(mask ? { mask } : {})}
             {...(props as object)}
         />
