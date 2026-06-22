@@ -5,6 +5,7 @@ export default class ProdutoPage {
     private readonly adminButton: Locator;
     private readonly produtoButton: Locator;
     private readonly produtoCards: Locator;
+    private readonly loadingProdutos: Locator;
     private readonly createButton: Locator;
     private readonly inputNome: Locator;
     private readonly inputDescricao: Locator;
@@ -27,6 +28,7 @@ export default class ProdutoPage {
         this.adminButton = page.getByTestId('admin-button');
         this.produtoButton = page.getByTestId('produto-button');
         this.produtoCards = page.getByTestId('produto-card');
+        this.loadingProdutos = page.getByTestId('loading-produtos');
         this.createButton = page.getByTestId('create-produto-button');
         this.inputNome = page.getByTestId('input-nome-produto');
         this.inputDescricao = page.getByTestId('input-descricao-produto');
@@ -53,13 +55,14 @@ export default class ProdutoPage {
     }
 
     async list() {
-        const temProdutos = await this.produtoCards.first().isVisible()
+        await expect(this.loadingProdutos).not.toBeVisible();
 
-        if (temProdutos) {
-            const quantidade = await this.produtoCards.count()
-            expect(quantidade).toBeGreaterThan(0)
+        const quantidade = await this.produtoCards.count();
+
+        if (quantidade > 0) {
+            expect(quantidade).toBeGreaterThan(0);
         } else {
-            await expect(this.page.getByTestId('empty-produtos')).toBeVisible()
+            await expect(this.page.getByTestId('empty-produtos')).toBeVisible();
         }
     }
 
@@ -94,11 +97,6 @@ export default class ProdutoPage {
         await this.page.waitForURL("/admin/produtos")
     }
 
-    /**
-     * Cenário de erro: id_categoria/id_marca são hidden inputs sem
-     * "required", então o HTML não impede o submit sem selecioná-los,
-     * mas o backend exige ambos no createProdutoSchema.
-     */
     async createSemCategoriaEMarca(dados: {
         nome: string;
         descricao: string;
@@ -115,7 +113,6 @@ export default class ProdutoPage {
         await this.inputPreco.fill(dados.preco)
         await this.inputEstoque.fill(dados.estoque)
 
-        // Propositalmente não seleciona categoria nem marca
         await this.selectDestaque.selectOption(dados.destaque)
         await this.selectAtivo.selectOption(dados.ativo)
         await this.submitButton.click()
@@ -156,12 +153,10 @@ export default class ProdutoPage {
 
         await this.deleteButton.click()
 
-        // SweetAlert de confirmação ("Excluir produto?")
         await expect(this.swalMessage).toBeVisible()
         await expect(this.swalTitle).toHaveText("Excluir produto?")
         await this.swalConfirmButton.click()
 
-        // SweetAlert de sucesso ("Produto excluído com sucesso!")
         await expect(this.swalMessage).toBeVisible()
         await expect(this.swalTitle).toHaveText("Produto excluído com sucesso!")
         await this.swalConfirmButton.click()
@@ -169,11 +164,6 @@ export default class ProdutoPage {
         await this.page.waitForURL("/admin/produtos")
     }
 
-    /**
-     * Cenário de erro: cancelar a confirmação não deve excluir o produto.
-     * Conforme useDeleteProduto.ts, se !confirm.isConfirmed a função
-     * retorna antes de chamar a API e nenhum outro SweetAlert é exibido.
-     */
     async cancelarExclusao() {
         await this.produtoCards.first().click()
 
@@ -188,16 +178,10 @@ export default class ProdutoPage {
         await expect(this.page.getByTestId('produto-detalhes')).toBeVisible()
     }
 
-    /**
-     * Cenário de erro: o input[type=number] tem min={0.01} no HTML, mas
-     * o Playwright usa .fill() e não aciona a validação nativa do browser.
-     * Com preco=0 o submit chega ao backend, onde o Zod rejeita com
-     * .positive("Preço deve ser maior que zero").
-     */
     async createComPrecoInvalido(dados: {
         nome: string;
         descricao: string;
-        preco: string;          // ex: "0" ou "-1"
+        preco: string;    
         estoque: string;
         destaque: '1' | '0';
         ativo: '1' | '0';
