@@ -36,6 +36,7 @@ export const MarcaList = () => {
                 <AtivoDropdown value={ativo} onChange={handleAtivoChange} />
 
                 <button
+                    data-testid="create-marca-button"
                     onClick={() => router.push('/admin/marcas/cadastro')}
                     className="
         appearance-none cursor-pointer
@@ -53,10 +54,10 @@ export const MarcaList = () => {
                 </button>
             </div>
 
-            {loading && <p className="text-center font-medium text-gray-400 animate-pulse">Carregando marcas...</p>}
+            {loading && <p data-testid="loading-marcas" className="text-center font-medium text-gray-400 animate-pulse">Carregando marcas...</p>}
             {error && <p className="text-center font-medium text-red-600 animate-pulse">{error}</p>}
             {!loading && !error && marcas.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 gap-3 text-gray-400">
+                <div data-testid="empty-marcas" className="flex flex-col items-center justify-center py-20 gap-3 text-gray-400">
                     <Icon name="faStar" />
                     <p className="text-sm font-medium">Nenhuma marca encontrada.</p>
                 </div>

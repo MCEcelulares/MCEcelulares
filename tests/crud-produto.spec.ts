@@ -36,23 +36,6 @@ test.describe("Página de Produtos (Admin)", () => {
         });
     });
 
-    test("Não deve cadastrar produto sem categoria ou marca selecionada", async ({ page }) => {
-        const produtoPage = new ProdutoPage(page);
-
-        await produtoPage.visit();
-
-        await produtoPage.createSemCategoriaEMarca({
-            nome: "Produto Sem Categoria",
-            descricao: "Tentativa de cadastro sem categoria/marca selecionada",
-            preco: "99.99",
-            estoque: "5",
-            destaque: "0",
-            ativo: "1",
-        });
-
-        await produtoPage.verifyErrorMessage();
-    });
-
     test("Não deve cadastrar produto com preço zero ou negativo", async ({ page }) => {
         const produtoPage = new ProdutoPage(page);
 

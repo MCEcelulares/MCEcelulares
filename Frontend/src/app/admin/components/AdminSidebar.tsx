@@ -36,7 +36,7 @@ export const AdminSidebar = () => {
           Categorias
         </Link>
 
-        <Link href="/admin/marcas" className={linkClass('/admin/marcas')}>
+        <Link href="/admin/marcas" className={linkClass('/admin/marcas')} data-testid="marca-button">
           <Icon name="faStar" className="w-4" />
           Marcas
         </Link>
