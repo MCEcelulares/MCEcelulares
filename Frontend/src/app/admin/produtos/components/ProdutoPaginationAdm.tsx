@@ -65,16 +65,24 @@ export const ProdutoPaginationAdm = () => {
         transition-colors duration-150
         disabled:cursor-not-allowed disabled:opacity-50
                     "
+                    data-testid="create-produto-button"
                 >
                     Adicionar produto
                     <Icon name='faPlus' className='pl-2' />
                 </button>
             </div>
 
-            {loading && <p className="text-center font-medium text-gray-400 animate-pulse">Carregando produtos...</p>}
+            {loading && (
+                <p
+                    data-testid="loading-produtos"
+                    className="text-center font-medium text-gray-400 animate-pulse"
+                >
+                    Carregando produtos...
+                </p>
+            )}
             {error && <p className="text-center font-medium text-red-600 animate-pulse">{error}</p>}
             {!loading && !error && produtos.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-20 gap-3 text-gray-400">
+                <div className="flex flex-col items-center justify-center py-20 gap-3 text-gray-400" data-testid="empty-produtos">
                     <Icon name="faMobileScreen" />
                     <p className="text-sm font-medium">Nenhum produto encontrado.</p>
                 </div>

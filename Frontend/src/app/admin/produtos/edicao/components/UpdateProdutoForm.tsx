@@ -90,12 +90,14 @@ export const UpdateProdutoForm = () => {
                   icon={editando ? 'faXmark' : 'faPen'}
                   onClick={() => setEditando(!editando)}
                   className="text-purple-700 hover:opacity-75 transition-opacity"
+                  data-testid="btn-editar-produto"
                 />
                 <Button
                   icon="faTrash"
                   onClick={handleDelete}
                   disabled={excluindo}
                   className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
+                  data-testid="btn-excluir-produto"
                 />
                 <button
                   type="button"
@@ -128,10 +130,11 @@ export const UpdateProdutoForm = () => {
                 type="text"
                 placeholder="Nome do produto"
                 required
-                minLength={2}
+                minLength={3}
                 maxLength={150}
-                title="O nome deve ter entre 2 e 150 caracteres."
+                title="O nome deve ter entre 3 e 150 caracteres."
                 defaultValue={produto.nome ?? ''}
+                data-testid="input-nome-produto"
               />
 
               <textarea
@@ -144,6 +147,7 @@ export const UpdateProdutoForm = () => {
                 title="A descrição deve ter entre 5 e 500 caracteres."
                 defaultValue={produto.descricao ?? ''}
                 className="w-full rounded-[30px] bg-white px-6 py-4 text-gray-700 outline-none transition-all focus:ring-2 focus:ring-[#7929c8]/50 border-none resize-none"
+                data-testid="input-descricao-produto"
               />
 
               <div className="grid grid-cols-2 gap-4">
@@ -157,6 +161,7 @@ export const UpdateProdutoForm = () => {
                   step={0.01}
                   title="Informe um preço válido maior que zero."
                   defaultValue={produto.preco ?? 0}
+                  data-testid="input-preco-produto"
                 />
                 <Input
                   variant="white"
@@ -168,13 +173,14 @@ export const UpdateProdutoForm = () => {
                   step={1}
                   title="Informe a quantidade em estoque."
                   defaultValue={produto.estoque ?? 0}
+                  data-testid="input-estoque-produto"
                 />
               </div>
 
               <div>
                 {loadingFile && <p>Enviando imagem...</p>}
                 {imagemUrl && (
-                  <Image src={imagemUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" />
+                  <Image src={imagemUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" width={1000} height={0}/>
                 )}
                 <input
                   id="imagem-upload"
@@ -220,6 +226,7 @@ export const UpdateProdutoForm = () => {
                     required
                     defaultValue={produto.destaque ? '1' : '0'}
                     className="w-full rounded-[30px] bg-white px-6 py-4 text-gray-700 outline-none transition-all focus:ring-2 focus:ring-[#7929c8]/50 border-none appearance-none cursor-pointer"
+                    data-testid="select-destaque-produto"
                   >
                     <option value="" disabled>Selecione...</option>
                     <option value="1">Sim</option>
@@ -233,6 +240,7 @@ export const UpdateProdutoForm = () => {
                     required
                     defaultValue={produto.ativo ? '1' : '0'}
                     className="w-full rounded-[30px] bg-white px-6 py-4 text-gray-700 outline-none transition-all focus:ring-2 focus:ring-[#7929c8]/50 border-none appearance-none cursor-pointer"
+                    data-testid="select-ativo-produto"
                   >
                     <option value="" disabled>Selecione...</option>
                     <option value="1">Ativo</option>
@@ -245,10 +253,11 @@ export const UpdateProdutoForm = () => {
                 text={atualizando ? 'Salvando...' : 'Salvar alterações'}
                 type="submit"
                 disabled={atualizando}
+                data-testid="submit-produto"
               />
             </form>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" data-testid="produto-detalhes">
               <div>
                 <p className="text-xs text-gray-400 uppercase font-semibold">Nome</p>
                 <p className="font-medium text-gray-900">{produto.nome}</p>

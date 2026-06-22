@@ -62,11 +62,13 @@ export const UpdateMarcaForm = () => {
             {!loading && marcaLocal && (
               <div className="flex items-center gap-3">
                 <Button
+                  data-testid="btn-editar-marca"
                   icon={editando ? 'faXmark' : 'faPen'}
                   onClick={() => setEditando(!editando)}
                   className="text-purple-700 hover:opacity-75 transition-opacity"
                 />
                 <Button
+                  data-testid="btn-excluir-marca"
                   icon="faTrash"
                   onClick={handleDelete}
                   disabled={excluindo}
@@ -97,6 +99,7 @@ export const UpdateMarcaForm = () => {
           ) : editando ? (
             <form action={handleSubmit} className="flex flex-col gap-6">
               <Input
+                data-testid="input-nome-marca"
                 variant="white"
                 name="nome"
                 type="text"
@@ -110,6 +113,7 @@ export const UpdateMarcaForm = () => {
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-gray-500 uppercase font-semibold px-2">Status</p>
                 <select
+                  data-testid="select-ativo-marca"
                   name="ativo"
                   required
                   defaultValue={marcaLocal.ativo ? '1' : '0'}
@@ -121,13 +125,14 @@ export const UpdateMarcaForm = () => {
                 </select>
               </div>
               <Button
+                data-testid="submit-marca"
                 text={atualizando ? 'Salvando...' : 'Salvar alterações'}
                 type="submit"
                 disabled={atualizando}
               />
             </form>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div data-testid="marca-detalhes" className="flex flex-col gap-4">
               <div>
                 <p className="text-xs text-gray-400 uppercase font-semibold">Nome</p>
                 <p className="font-medium text-gray-900">{marcaLocal.nome}</p>

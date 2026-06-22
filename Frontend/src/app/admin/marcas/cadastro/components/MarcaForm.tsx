@@ -41,6 +41,7 @@ export const MarcaForm = () => {
                 </h2>
 
                 <Input
+                    data-testid="input-nome-marca"
                     variant="white"
                     name="nome"
                     type="text"
@@ -54,6 +55,7 @@ export const MarcaForm = () => {
                 <div className="flex flex-col gap-2">
                     <p className="text-xs text-gray-500 uppercase font-semibold px-2">Status</p>
                     <select
+                        data-testid="select-ativo-marca"
                         name="ativo"
                         required
                         defaultValue=""
@@ -66,6 +68,7 @@ export const MarcaForm = () => {
                 </div>
 
                 <Button
+                    data-testid="submit-marca"
                     text={loading ? 'Salvando...' : 'Salvar marca'}
                     type="submit"
                     disabled={loading}

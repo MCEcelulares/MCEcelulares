@@ -66,7 +66,7 @@ export const Header = () => {
             </Link>
             <LogoutButton />
             {user?.admin && (
-              <Link href="/admin" className="flex items-center gap-2 transition-transform group hover:text-gray-200">
+              <Link href="/admin" className="flex items-center gap-2 transition-transform group hover:text-gray-200" data-testid="admin-button">
                 <Icon name="faUsersGear" className="w-5 text-white group-hover:text-gray-200" size="xl" />
               </Link>
             )}
@@ -83,6 +83,7 @@ export const Header = () => {
             <Link
               href="/cadastro"
               className="border-2 border-white text-white px-5 py-2 rounded-full font-semibold text-sm hover:bg-white hover:text-[#7929c8] transition-all"
+              data-testid="signup-button"
             >
               Cadastrar
             </Link>
@@ -105,9 +106,9 @@ export const Header = () => {
             { href: "/produtos", icon: "faMobileScreen", label: "Produtos" },
             ...(isAuthenticated
               ? [
-                  { href: "/carrinho", icon: "faCartShopping", label: "Carrinho" },
-                  { href: "/pedidos", icon: "faBox", label: "Pedidos" },
-                ]
+                { href: "/carrinho", icon: "faCartShopping", label: "Carrinho" },
+                { href: "/pedidos", icon: "faBox", label: "Pedidos" },
+              ]
               : []),
             { href: "/contato", icon: "faPhone", label: "Contato" },
           ].map(({ href, icon, label }) => (

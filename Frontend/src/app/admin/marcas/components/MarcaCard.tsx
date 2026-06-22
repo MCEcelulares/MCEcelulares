@@ -13,7 +13,10 @@ type MarcaCardProps = {
 
 export const MarcaCard = ({ marca }: MarcaCardProps) => {
     return (
-        <Link href={`/admin/marcas/edicao?id=${marca.id_marca}`} className="
+        <Link
+            href={`/admin/marcas/edicao?id=${marca.id_marca}`}
+            data-testid="marca-card"
+            className="
             flex items-center justify-between
             bg-white hover:bg-gray-50
             border border-gray-200 hover:border-gray-300
