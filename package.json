@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/MatheusErcoli/MCEcelulares#readme",
   "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.2"
   }
