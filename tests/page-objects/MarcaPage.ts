@@ -37,18 +37,17 @@ export default class MarcaPage {
 
     async visit() {
         await this.adminButton.click();
-        await expect(this.page).toHaveURL("/admin")
+        await expect(this.page).toHaveURL("/admin");
         await this.marcaButton.click();
-        await expect(this.page).toHaveURL("/admin/marcas")
+        await expect(this.page).toHaveURL("/admin/marcas");
     }
 
     async list() {
         await expect(this.loadingMarcas).not.toBeVisible();
-
         const quantidade = await this.marcaCards.count();
 
         if (quantidade > 0) {
-            expect(quantidade).toBeGreaterThan(0);
+            await expect(this.marcaCards.first()).toBeVisible();
         } else {
             await expect(this.page.getByTestId('empty-marcas')).toBeVisible();
         }
@@ -59,106 +58,73 @@ export default class MarcaPage {
         ativo: '1' | '0';
     }) {
         await this.createButton.click();
-        await expect(this.page).toHaveURL("/admin/marcas/cadastro")
-
-        await this.inputNome.fill(dados.nome)
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
-
-        await expect(this.swalConfirmButton).toBeVisible()
-        await this.swalConfirmButton.click()
-    }
-
-    async verifyNomeInvalido() {
-        const valor = await this.inputNome.inputValue();
-        expect(valor).toBe("");
-
         await expect(this.page).toHaveURL("/admin/marcas/cadastro");
+
+        await this.inputNome.fill(dados.nome);
+        await this.selectAtivo.selectOption(dados.ativo);
+        await this.submitButton.click();
+
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Marca cadastrada com sucesso!");
+        await this.swalConfirmButton.click();
+
+        await this.page.waitForURL("/admin/marcas");
     }
 
     async createComNomeVazio(dados: {
         ativo: '1' | '0';
     }) {
         await this.createButton.click();
-        await expect(this.page).toHaveURL("/admin/marcas/cadastro")
+        await expect(this.page).toHaveURL("/admin/marcas/cadastro");
 
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
+        await this.selectAtivo.selectOption(dados.ativo);
+        await this.submitButton.click();
+
+        const valor = await this.inputNome.inputValue();
+        expect(valor).toBe("");
+        await expect(this.page).toHaveURL("/admin/marcas/cadastro");
     }
 
     async edit(dados: {
         nome: string;
         ativo: '1' | '0';
     }) {
-        await this.marcaCards.first().click()
+        await this.marcaCards.first().click();
+        await this.editButton.click();
 
-        await this.editButton.click()
+        await this.inputNome.fill(dados.nome);
+        await this.selectAtivo.selectOption(dados.ativo);
+        await this.submitButton.click();
 
-        await this.inputNome.fill(dados.nome)
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
-
-        await expect(this.swalConfirmButton).toBeVisible()
-        await this.swalConfirmButton.click()
-    }
-
-    async delete() {
-        await this.marcaCards.first().click()
-
-        await this.deleteButton.click()
-
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Excluir marca?")
-        await this.swalConfirmButton.click()
-
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Marca excluída com sucesso!")
-        await this.swalConfirmButton.click()
-
-        await this.page.waitForURL("/admin/marcas")
-    }
-
-    async cancelarExclusao() {
-        await this.marcaCards.first().click()
-
-        await this.deleteButton.click()
-
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Excluir marca?")
-
-        await this.swalCancelButton.click()
-
-        await expect(this.swalMessage).not.toBeVisible()
-        await expect(this.page.getByTestId('marca-detalhes')).toBeVisible()
-    }
-
-    async verifySuccessMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Marca cadastrada com sucesso!");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyErrorMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao cadastrar marca");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyEditSuccessMessage() {
         await expect(this.swalMessage).toBeVisible();
         await expect(this.swalTitle).toHaveText("Marca atualizada com sucesso!");
         await this.swalConfirmButton.click();
     }
 
-    async verifyEditErrorMessage() {
+    async delete() {
+        await this.marcaCards.first().click();
+        await this.deleteButton.click();
+
         await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao atualizar marca");
+        await expect(this.swalTitle).toHaveText("Excluir marca?");
         await this.swalConfirmButton.click();
+
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Marca excluída com sucesso!");
+        await this.swalConfirmButton.click();
+
+        await this.page.waitForURL("/admin/marcas");
     }
 
-    async verifyDeleteErrorMessage() {
+    async cancelarExclusao() {
+        await this.marcaCards.first().click();
+        await this.deleteButton.click();
+
         await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao excluir marca");
-        await this.swalConfirmButton.click();
+        await expect(this.swalTitle).toHaveText("Excluir marca?");
+        await this.swalCancelButton.click();
+
+        await expect(this.swalMessage).not.toBeVisible();
+        await expect(this.page.getByTestId('marca-detalhes')).toBeVisible();
     }
 }

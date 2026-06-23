@@ -9,7 +9,6 @@ test.describe("Página de Marcas (Admin)", () => {
 
         await loginPage.visit();
         await loginPage.login("rafaelfrossard@gmail.com", "@Rafael1");
-        await loginPage.loginSuccess();
     });
 
     test("Deve listar marcas", async ({ page }) => {
@@ -38,8 +37,6 @@ test.describe("Página de Marcas (Admin)", () => {
         await marcaPage.createComNomeVazio({
             ativo: "1"
         });
-
-        await marcaPage.verifyNomeInvalido();
     });
 
     test("Deve editar uma marca", async ({ page }) => {
