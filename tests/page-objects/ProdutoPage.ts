@@ -49,18 +49,17 @@ export default class ProdutoPage {
 
     async visit() {
         await this.adminButton.click();
-        await expect(this.page).toHaveURL("/admin")
+        await expect(this.page).toHaveURL("/admin");
         await this.produtoButton.click();
-        await expect(this.page).toHaveURL("/admin/produtos")
+        await expect(this.page).toHaveURL("/admin/produtos");
     }
 
     async list() {
         await expect(this.loadingProdutos).not.toBeVisible();
-
         const quantidade = await this.produtoCards.count();
 
         if (quantidade > 0) {
-            expect(quantidade).toBeGreaterThan(0);
+            await expect(this.produtoCards.first()).toBeVisible();
         } else {
             await expect(this.page.getByTestId('empty-produtos')).toBeVisible();
         }
@@ -77,45 +76,25 @@ export default class ProdutoPage {
         idMarca: string;
     }) {
         await this.createButton.click();
-        await expect(this.page).toHaveURL("/admin/produtos/cadastro")
+        await expect(this.page).toHaveURL("/admin/produtos/cadastro");
 
-        await this.inputNome.fill(dados.nome)
-        await this.inputDescricao.fill(dados.descricao)
-        await this.inputPreco.fill(dados.preco)
-        await this.inputEstoque.fill(dados.estoque)
+        await this.inputNome.fill(dados.nome);
+        await this.inputDescricao.fill(dados.descricao);
+        await this.inputPreco.fill(dados.preco);
+        await this.inputEstoque.fill(dados.estoque);
 
-        await this.selectCategoria.selectOption(dados.idCategoria)
-        await this.selectMarca.selectOption(dados.idMarca)
+        await this.selectCategoria.selectOption(dados.idCategoria);
+        await this.selectMarca.selectOption(dados.idMarca);
 
-        await this.selectDestaque.selectOption(dados.destaque)
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
+        await this.selectDestaque.selectOption(dados.destaque);
+        await this.selectAtivo.selectOption(dados.ativo);
+        await this.submitButton.click();
 
-        await expect(this.swalConfirmButton).toBeVisible()
-        await this.swalConfirmButton.click()
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Produto cadastrado com sucesso!");
+        await this.swalConfirmButton.click();
 
-        await this.page.waitForURL("/admin/produtos")
-    }
-
-    async createSemCategoriaEMarca(dados: {
-        nome: string;
-        descricao: string;
-        preco: string;
-        estoque: string;
-        destaque: '1' | '0';
-        ativo: '1' | '0';
-    }) {
-        await this.createButton.click();
-        await expect(this.page).toHaveURL("/admin/produtos/cadastro")
-
-        await this.inputNome.fill(dados.nome)
-        await this.inputDescricao.fill(dados.descricao)
-        await this.inputPreco.fill(dados.preco)
-        await this.inputEstoque.fill(dados.estoque)
-
-        await this.selectDestaque.selectOption(dados.destaque)
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
+        await this.page.waitForURL("/admin/produtos");
     }
 
     async edit(dados: {
@@ -128,60 +107,57 @@ export default class ProdutoPage {
         idCategoria: string;
         idMarca: string;
     }) {
-        await this.produtoCards.first().click()
+        await this.produtoCards.first().click();
+        await this.editButton.click();
 
-        await this.editButton.click()
+        await this.inputNome.fill(dados.nome);
+        await this.inputDescricao.fill(dados.descricao);
+        await this.inputPreco.fill(dados.preco);
+        await this.inputEstoque.fill(dados.estoque);
 
-        await this.inputNome.fill(dados.nome)
-        await this.inputDescricao.fill(dados.descricao)
-        await this.inputPreco.fill(dados.preco)
-        await this.inputEstoque.fill(dados.estoque)
+        await this.selectCategoria.selectOption(dados.idCategoria);
+        await this.selectMarca.selectOption(dados.idMarca);
 
-        await this.selectCategoria.selectOption(dados.idCategoria)
-        await this.selectMarca.selectOption(dados.idMarca)
+        await this.selectDestaque.selectOption(dados.destaque);
+        await this.selectAtivo.selectOption(dados.ativo);
+        await this.submitButton.click();
 
-        await this.selectDestaque.selectOption(dados.destaque)
-        await this.selectAtivo.selectOption(dados.ativo)
-        await this.submitButton.click()
-
-        await expect(this.swalConfirmButton).toBeVisible()
-        await this.swalConfirmButton.click()
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Produto atualizado com sucesso!");
+        await this.swalConfirmButton.click();
     }
 
     async delete() {
-        await this.produtoCards.first().click()
+        await this.produtoCards.first().click();
+        await this.deleteButton.click();
 
-        await this.deleteButton.click()
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Excluir produto?");
+        await this.swalConfirmButton.click();
 
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Excluir produto?")
-        await this.swalConfirmButton.click()
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Produto excluído com sucesso!");
+        await this.swalConfirmButton.click();
 
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Produto excluído com sucesso!")
-        await this.swalConfirmButton.click()
-
-        await this.page.waitForURL("/admin/produtos")
+        await this.page.waitForURL("/admin/produtos");
     }
 
     async cancelarExclusao() {
-        await this.produtoCards.first().click()
+        await this.produtoCards.first().click();
+        await this.deleteButton.click();
 
-        await this.deleteButton.click()
+        await expect(this.swalMessage).toBeVisible();
+        await expect(this.swalTitle).toHaveText("Excluir produto?");
+        await this.swalCancelButton.click();
 
-        await expect(this.swalMessage).toBeVisible()
-        await expect(this.swalTitle).toHaveText("Excluir produto?")
-
-        await this.swalCancelButton.click()
-
-        await expect(this.swalMessage).not.toBeVisible()
-        await expect(this.page.getByTestId('produto-detalhes')).toBeVisible()
+        await expect(this.swalMessage).not.toBeVisible();
+        await expect(this.page.getByTestId('produto-detalhes')).toBeVisible();
     }
 
     async createComPrecoInvalido(dados: {
         nome: string;
         descricao: string;
-        preco: string;    
+        preco: string;
         estoque: string;
         destaque: '1' | '0';
         ativo: '1' | '0';
@@ -193,7 +169,7 @@ export default class ProdutoPage {
 
         await this.inputNome.fill(dados.nome);
         await this.inputDescricao.fill(dados.descricao);
-        await this.inputPreco.fill(dados.preco);     
+        await this.inputPreco.fill(dados.preco);
         await this.inputEstoque.fill(dados.estoque);
 
         await this.selectCategoria.selectOption(dados.idCategoria);
@@ -202,35 +178,9 @@ export default class ProdutoPage {
         await this.selectDestaque.selectOption(dados.destaque);
         await this.selectAtivo.selectOption(dados.ativo);
         await this.submitButton.click();
-    }
 
-    async verifySuccessMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Produto cadastrado com sucesso!");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyErrorMessage() {
         await expect(this.swalMessage).toBeVisible();
         await expect(this.swalTitle).toHaveText("Erro ao cadastrar produto");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyEditSuccessMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Produto atualizado com sucesso!");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyEditErrorMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao atualizar produto");
-        await this.swalConfirmButton.click();
-    }
-
-    async verifyDeleteErrorMessage() {
-        await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao excluir produto");
         await this.swalConfirmButton.click();
     }
 }

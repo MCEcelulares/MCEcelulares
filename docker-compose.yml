@@ -17,6 +17,9 @@ services:
     depends_on:
       - backend
 
+    networks:
+      - app_network
+
   backend:
     build: ./Backend
 
@@ -37,10 +40,13 @@ services:
         condition: service_healthy
 
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
+
+    networks:
+      - app_network
 
   nginx:
     image: nginx:latest
@@ -57,11 +63,11 @@ services:
       - frontend
       - backend
 
+    networks:
+      - app_network
+
   mysql:
     image: mysql:8
-
-    ports:
-      - "3306:3306"
 
     restart: unless-stopped
 
@@ -73,10 +79,17 @@ services:
       - mysql_data:/var/lib/mysql
 
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+    networks:
+      - app_network
+
 volumes:
   mysql_data:
+
+networks:
+  app_network:
+    driver: bridge
