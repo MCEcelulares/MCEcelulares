@@ -16,7 +16,7 @@ export default defineConfig({
   use: {
     baseURL: baseURL,
     
-    ignoreHTTPSErrors: baseURL.includes('localhost') || baseURL.includes('nginx'),
+    ignoreHTTPSErrors: baseURL.includes('localhost') || baseURL.includes('mcecelulares.local'),
 
     trace: 'on-first-retry',
   },
