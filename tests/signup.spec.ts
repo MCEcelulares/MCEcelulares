@@ -17,8 +17,6 @@ test.describe("Página de Cadastro", () => {
             "@Rafael1",
             "@Rafael1"
         );
-
-        await signupPage.verifySuccessMessage();
     });
 
     test("Deve exibir erro ao tentar cadastrar e-mail já existente", async ({ page }) => {
@@ -26,16 +24,15 @@ test.describe("Página de Cadastro", () => {
 
         await signupPage.visit();
 
-        await signupPage.signup(
+        await signupPage.signupComErro(
             "Rafael",
             "rafaelfrossard@gmail.com",
             "123.123.123-12",
             "(12) 12345-1234",
             "@Rafael1",
-            "@Rafael1"
+            "@Rafael1",
+            "Erro ao cadastrar"
         );
-
-        await signupPage.verifyErrorMessage();
     });
 
     test("Deve exibir erro quando as senhas não coincidem", async ({ page }) => {
@@ -43,15 +40,14 @@ test.describe("Página de Cadastro", () => {
 
         await signupPage.visit();
 
-        await signupPage.signup(
+        await signupPage.signupComErro(
             "Rafael",
             "rafaelfrossard@gmail.com",
             "123.123.123-12",
             "(12) 12345-1234",
             "@Rafael1",
-            "SenhaDiferente123"
+            "SenhaDiferente123",
+            "Erro ao cadastrar"
         );
-
-        await signupPage.verifyErrorMessage();
     });
 });

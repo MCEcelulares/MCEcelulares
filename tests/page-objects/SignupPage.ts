@@ -46,18 +46,23 @@ export default class SignupPage {
         await this.inputPassword.fill(password);
         await this.inputRepeatPassword.fill(repeatPassword);
         await this.accessButton.click();
-    }
 
-    async verifySuccessMessage() {
         await expect(this.swalMessage).toBeVisible();
         await expect(this.swalTitle).toHaveText("Cadastro realizado com sucesso!");
         await this.swalConfirmButton.click();
     }
 
-    
-    async verifyErrorMessage() {
+    async signupComErro(name: string, email: string, cpf: string, phone: string, password: string, repeatPassword: string, mensagemEsperada: string = "Erro ao cadastrar") {
+        await this.inputName.fill(name);
+        await this.inputEmail.fill(email);
+        await this.inputCpf.fill(cpf);
+        await this.inputPhone.fill(phone);
+        await this.inputPassword.fill(password);
+        await this.inputRepeatPassword.fill(repeatPassword);
+        await this.accessButton.click();
+
         await expect(this.swalMessage).toBeVisible();
-        await expect(this.swalTitle).toHaveText("Erro ao cadastrar");
+        await expect(this.swalTitle).toHaveText(mensagemEsperada);
         await this.swalConfirmButton.click();
     }
 }
