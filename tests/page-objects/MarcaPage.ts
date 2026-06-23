@@ -70,7 +70,6 @@ export default class MarcaPage {
     }
 
     async verifyNomeInvalido() {
-        // Garante que o formulário não foi enviado e o campo nome continua vazio
         const valor = await this.inputNome.inputValue();
         expect(valor).toBe("");
 
