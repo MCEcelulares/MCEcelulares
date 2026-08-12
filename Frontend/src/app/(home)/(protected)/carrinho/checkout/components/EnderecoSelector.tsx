@@ -48,7 +48,7 @@ export const EnderecoSelector = () => {
       console.log('checkout criado:', checkout);
 
       // 3. redireciona pro mercado pago
-      window.location.href = checkout.checkout_url;
+      window.location.assign(checkout.checkout_url);
     } catch (error) {
       console.error('erro no checkout cru:', error);
       setLoadingPedido(false);
