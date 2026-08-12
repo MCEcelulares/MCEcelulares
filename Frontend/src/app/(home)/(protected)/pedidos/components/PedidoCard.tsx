@@ -35,8 +35,6 @@ export const PedidoCard = ({ pedido }: PedidoCardProps) => {
   const statusLabel = STATUS_LABELS[status] ?? pedido.status ?? 'Em andamento';
   const statusStyle = STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-700';
 
-  // TESTE CRU DE INTEGRAÇÃO COM MERCADO PAGO — mesma lógica do EnderecoSelector,
-  // só que aqui o pedido já existe, então só chama o /checkout direto.
   const handleCheckout = async () => {
     setLoadingCheckout(true);
     try {

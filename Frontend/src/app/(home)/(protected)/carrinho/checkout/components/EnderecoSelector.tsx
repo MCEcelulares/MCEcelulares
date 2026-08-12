@@ -20,12 +20,9 @@ export const EnderecoSelector = () => {
   useEffect(() => { fetchEndereco(); }, [fetchEndereco]);
   useEffect(() => { fetchCarrinho(); }, [fetchCarrinho]);
 
-  // TESTE CRU DE INTEGRAÇÃO COM MERCADO PAGO — sem tratamento de erro chique,
-  // só pra validar o fluxo criar pedido -> criar checkout -> redirecionar.
   const handleClick = async (id_endereco: number) => {
     setLoadingPedido(true);
     try {
-      // 1. cria o pedido
       const resPedido = await fetch('/api/pedido', {
         method: 'POST',
         headers: {
@@ -37,7 +34,6 @@ export const EnderecoSelector = () => {
       const pedido = await resPedido.json();
       console.log('pedido criado:', pedido);
 
-      // 2. cria o checkout do mercado pago pra esse pedido
       const resCheckout = await fetch(`/api/pedido/${pedido.id_pedido}/checkout`, {
         method: 'POST',
         headers: {
@@ -47,7 +43,6 @@ export const EnderecoSelector = () => {
       const checkout = await resCheckout.json();
       console.log('checkout criado:', checkout);
 
-      // 3. redireciona pro mercado pago
       window.location.assign(checkout.checkout_url);
     } catch (error) {
       console.error('erro no checkout cru:', error);
