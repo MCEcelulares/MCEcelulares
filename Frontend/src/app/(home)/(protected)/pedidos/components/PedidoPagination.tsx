@@ -29,6 +29,11 @@ export const PedidoPagination = () => {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* DEBUG CRU - o webhook do mercado pago atualiza o status async,
+          esse botão só refaz o fetch pra você ver se já mudou */}
+      <button onClick={() => fetchPedidos(currentPage)} className="text-xs text-purple-600 underline w-fit">
+        atualizar status
+      </button>
       {pedidos.map((pedido) => (
         <PedidoCard key={pedido.id_pedido} pedido={pedido} />
       ))}
