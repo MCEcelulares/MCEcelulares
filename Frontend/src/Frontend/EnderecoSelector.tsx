@@ -1,58 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/src/components/layout/Icon';
 import { useGetEnderecos } from '@/src/hooks/endereco/useGetEnderecos';
 import { useGetCarrinho } from '@/src/hooks/carrinho/useGetCarrinho';
 import { SubtotalCard } from '@/src/components/produtos/SubtotalCard';
+import { useCreatePedido } from '@/src/hooks/pedido/useCreatePedido';
 import { Button } from '@/src/components/layout/Button';
-import { useAuth } from '@/src/contexts/AuthContext';
 
 export const EnderecoSelector = () => {
   const router = useRouter();
-  const { token } = useAuth();
   const { execute: fetchEndereco, loading: loadingEndereco, enderecos } = useGetEnderecos();
   const { execute: fetchCarrinho, carrinho } = useGetCarrinho();
-  const [loadingPedido, setLoadingPedido] = useState(false);
+  const { execute: createPedido, loading: loadingPedido } = useCreatePedido();
 
   useEffect(() => { fetchEndereco(); }, [fetchEndereco]);
   useEffect(() => { fetchCarrinho(); }, [fetchCarrinho]);
 
-  // TESTE CRU DE INTEGRAÇÃO COM MERCADO PAGO — sem tratamento de erro chique,
-  // só pra validar o fluxo criar pedido -> criar checkout -> redirecionar.
   const handleClick = async (id_endereco: number) => {
-    setLoadingPedido(true);
-    try {
-      // 1. cria o pedido
-      const resPedido = await fetch('/api/pedido', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ id_endereco }),
-      });
-      const pedido = await resPedido.json();
-      console.log('pedido criado:', pedido);
-
-      // 2. cria o checkout do mercado pago pra esse pedido
-      const resCheckout = await fetch(`/api/pedido/${pedido.id_pedido}/checkout`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const checkout = await resCheckout.json();
-      console.log('checkout criado:', checkout);
-
-      // 3. redireciona pro mercado pago
-      window.location.assign(checkout.checkout_url);
-    } catch (error) {
-      console.error('erro no checkout cru:', error);
-      setLoadingPedido(false);
-    }
+    const result = await createPedido(id_endereco);
+    if (result?.success) router.push('/pedidos');
   };
 
   if (loadingEndereco) {

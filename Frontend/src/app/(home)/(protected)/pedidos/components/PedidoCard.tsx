@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
 import { Icon } from '@/src/components/layout/Icon';
-import { gerarPixPayload } from '@/src/lib/pixPayload';
+import { useAuth } from '@/src/contexts/AuthContext';
 
 const STATUS_OPTIONS = ['AGUARDANDO_PAGAMENTO', 'PAGO', 'ENVIADO', 'ENTREGUE', 'CANCELADO'] as const;
 type StatusType = typeof STATUS_OPTIONS[number];
@@ -29,19 +28,33 @@ interface PedidoCardProps {
 }
 
 export const PedidoCard = ({ pedido }: PedidoCardProps) => {
-  const [mostrarPix, setMostrarPix] = useState(false);
+  const { token } = useAuth();
+  const [loadingCheckout, setLoadingCheckout] = useState(false);
 
   const status = (pedido.status as StatusType) ?? 'AGUARDANDO_PAGAMENTO';
   const statusLabel = STATUS_LABELS[status] ?? pedido.status ?? 'Em andamento';
   const statusStyle = STATUS_STYLES[status] ?? 'bg-gray-100 text-gray-700';
 
-  const pixPayload = gerarPixPayload({
-    chave: '51150c5e-2f44-43d9-bdb6-3340f48a074b',
-    nome: 'MCE Celulares',
-    cidade: 'Campo Mourao',
-    valor: Number(pedido.valor_total),
-    txid: String(pedido.id_pedido),
-  });
+  // TESTE CRU DE INTEGRAÇÃO COM MERCADO PAGO — mesma lógica do EnderecoSelector,
+  // só que aqui o pedido já existe, então só chama o /checkout direto.
+  const handleCheckout = async () => {
+    setLoadingCheckout(true);
+    try {
+      const resCheckout = await fetch(`/api/pedido/${pedido.id_pedido}/checkout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const checkout = await resCheckout.json();
+      console.log('checkout criado:', checkout);
+
+      window.location.href = checkout.checkout_url;
+    } catch (error) {
+      console.error('erro no checkout cru:', error);
+      setLoadingCheckout(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-[24px] p-5 flex flex-col gap-3 border border-gray-100 shadow-sm">
@@ -87,22 +100,17 @@ export const PedidoCard = ({ pedido }: PedidoCardProps) => {
         </p>
       </div>
 
-      <button
-        onClick={() => setMostrarPix(v => !v)}
-        className="flex items-center justify-center gap-2 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors rounded-xl py-2"
-      >
-        <Icon name="faQrcode" className="text-purple-700" />
-        {mostrarPix ? 'Fechar PIX' : 'Pagar com PIX'}
-      </button>
-
-      {mostrarPix && (
-        <div className="flex flex-col items-center gap-2 pt-2 border-t border-gray-100">
-          <QRCodeSVG value={pixPayload} size={180} />
-          <p className="text-xs text-gray-500 font-medium">
-            R$ {Number(pedido.valor_total).toFixed(2).replace('.', ',')}
-          </p>
-          <p className="text-xs text-gray-400">Escaneie o QR Code para pagar via PIX</p>
-        </div>
+      {status === 'AGUARDANDO_PAGAMENTO' && (
+        <button
+          onClick={handleCheckout}
+          disabled={loadingCheckout}
+          className={`flex items-center justify-center gap-2 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors rounded-xl py-2
+            ${loadingCheckout ? 'opacity-60 cursor-not-allowed' : ''}
+          `}
+        >
+          <Icon name="faCreditCard" className="text-purple-700" />
+          {loadingCheckout ? 'Redirecionando...' : 'Finalizar pagamento'}
+        </button>
       )}
     </div>
   );
