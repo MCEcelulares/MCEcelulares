@@ -11,6 +11,8 @@ import { Button } from '@/src/components/layout/Button';
 import { CategoriaDropdownAdm } from '../../cadastro/components/CategoriaDropdownAdm';
 import { MarcaDropdownAdm } from '../../cadastro/components/MarcaDropdownAdm';
 import Image from 'next/image';
+import { validarImagem } from '@/src/lib/validarImagem'; 
+import { getImagemUrl } from '@/src/lib/getImagemurl';
 
 export const UpdateProdutoForm = () => {
   const searchParams = useSearchParams();
@@ -22,44 +24,57 @@ export const UpdateProdutoForm = () => {
   const { execute: deleteProduto, loading: excluindo } = useDeleteProduto();
 
   const [editando, setEditando] = useState(false);
-  const [imagemUrl, setImagemUrl] = useState<string>('');
-  const [loadingFile, setLoadingFile] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [novoArquivoSelecionado, setNovoArquivoSelecionado] = useState(false);
+  const [erroImagem, setErroImagem] = useState<string>('');
   const [idCategoria, setIdCategoria] = useState<string>('');
   const [idMarca, setIdMarca] = useState<string>('');
 
   useEffect(() => {
     if (id) fetchProduto(id);
-  }, [id,fetchProduto]);
+  }, [id, fetchProduto]);
 
   useEffect(() => {
     if (editando && produto) {
-      setImagemUrl(produto.imagem ?? '');
+      setPreviewUrl(produto.imagem ? getImagemUrl(produto.imagem) : '');
+      setNovoArquivoSelecionado(false);
+      setErroImagem('');
       setIdCategoria(String(produto.id_categoria ?? ''));
       setIdMarca(String(produto.id_marca ?? ''));
     }
   }, [editando, produto]);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Libera a URL de preview local ao trocar de imagem/sair da edição
+  useEffect(() => {
+    return () => {
+      if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    setLoadingFile(true);
 
-    const data = new FormData();
-    data.append('file', file);
-    data.append('upload_preset', 'ml_default');
-    data.append('cloud_name', 'dxahbqe6q');
+    const resultado = validarImagem(file);
+    if (!resultado.valido) {
+      setErroImagem(resultado.erro);
+      event.target.value = '';
+      return;
+    }
 
-    const response = await fetch('https://api.cloudinary.com/v1_1/dxahbqe6q/image/upload', {
-      method: 'POST',
-      body: data,
-    });
-
-    const uploadedImageUrl = await response.json();
-    setImagemUrl(uploadedImageUrl.secure_url);
-    setLoadingFile(false);
+    setErroImagem('');
+    setNovoArquivoSelecionado(true);
+    setPreviewUrl(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (formData: FormData) => {
+    // Só manda o campo "imagem" se um arquivo novo de fato foi escolhido.
+    // Caso contrário removemos (o input file ainda entra no FormData como
+    // um File vazio) pra que o backend preserve a imagem atual do produto.
+    if (!novoArquivoSelecionado) {
+      formData.delete('imagem');
+    }
+
     const result = await updateProduto(id, formData);
     if (result?.success) {
       setEditando(false);
@@ -178,17 +193,18 @@ export const UpdateProdutoForm = () => {
               </div>
 
               <div>
-                {loadingFile && <p>Enviando imagem...</p>}
-                {imagemUrl && (
-                  <Image src={imagemUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" width={1000} height={0}/>
+                {previewUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" />
                 )}
                 <input
                   id="imagem-upload"
-                  name="_imagem_file"
+                  name="imagem"
                   type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                  onChange={handleFileChange}
                   className="hidden"
+                  data-testid="input-imagem-produto"
                 />
                 <label
                   htmlFor="imagem-upload"
@@ -196,10 +212,12 @@ export const UpdateProdutoForm = () => {
                 >
                   <Icon name="faImage" className="w-4 text-gray-400" />
                   <span className="truncate">
-                    {imagemUrl ? 'Imagem selecionada ✓' : 'Imagem do produto'}
+                    {novoArquivoSelecionado ? 'Nova imagem selecionada ✓' : 'Trocar imagem do produto'}
                   </span>
                 </label>
-                <input type="hidden" name="imagem" value={imagemUrl} />
+                {erroImagem && (
+                  <p className="text-red-500 text-sm mt-2 px-2">{erroImagem}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -297,7 +315,7 @@ export const UpdateProdutoForm = () => {
               <div className="sm:col-span-2">
                 <p className="text-xs text-gray-400 uppercase font-semibold">Imagem</p>
                 <Image
-                  src={produto.imagem ?? "https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem"}
+                  src={getImagemUrl(produto.imagem)}
                   alt={produto.nome ?? 'Produto'}
                   width={128}
                   height={128}

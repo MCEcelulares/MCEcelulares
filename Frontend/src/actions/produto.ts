@@ -46,22 +46,10 @@ export async function getProdutosAPI(body: {
 
 export async function createProdutoAPI(token: string, formData: FormData) {
   try {
-    const body = {
-      nome: formData.get('nome') as string,
-      descricao: formData.get('descricao') as string,
-      preco: Number(formData.get('preco')),
-      estoque: Number(formData.get('estoque')),
-      imagem: formData.get('imagem') as string,
-      destaque: formData.get('destaque') === '1',
-      ativo: formData.get('ativo') === '1',
-      id_marca: Number(formData.get('id_marca')),
-      id_categoria: Number(formData.get('id_categoria')),
-    };
-
     const response = await fetchWithAuth(`${API_URL}/produto`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(body),
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData,
     });
 
     const data = await response.json();
@@ -75,22 +63,10 @@ export async function createProdutoAPI(token: string, formData: FormData) {
 
 export async function updateProdutoAPI(token: string, id_produto: number, formData: FormData) {
   try {
-    const body = {
-      nome: formData.get('nome') as string,
-      descricao: formData.get('descricao') as string,
-      preco: Number(formData.get('preco')),
-      estoque: Number(formData.get('estoque')),
-      imagem: formData.get('imagem') as string,
-      destaque: formData.get('destaque') === '1',
-      ativo: formData.get('ativo') === '1',
-      id_marca: Number(formData.get('id_marca')),
-      id_categoria: Number(formData.get('id_categoria')),
-    };
-
     const response = await fetchWithAuth(`${API_URL}/produto/${id_produto}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(body),
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData,
     });
 
     const data = await response.json();
