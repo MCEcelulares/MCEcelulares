@@ -3,6 +3,7 @@ import ProdutoController from "../controllers/produto.controllers";
 import { validate } from "../middlewares/validate.middleware";
 import authMiddleware from "../middlewares/auth.middleware";
 import adminMiddleware from "../middlewares/admin.middleware";
+import uploadProdutoImagem from "../middlewares/upload.middleware";
 import {
   createProdutoSchema,
   updateProdutoSchema,
@@ -16,6 +17,7 @@ router.post(
   "/",
   authMiddleware,
   adminMiddleware,
+  uploadProdutoImagem,
   validate(createProdutoSchema),
   ProdutoController.create
 );
@@ -26,6 +28,7 @@ router.put(
   "/:id",
   authMiddleware,
   adminMiddleware,
+  uploadProdutoImagem,
   validate(updateProdutoSchema),
   ProdutoController.update
 );

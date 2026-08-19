@@ -20,4 +20,6 @@ router.put("/:id", authMiddleware, adminMiddleware, validate(updatePedidoSchema)
 
 router.delete("/:id", authMiddleware, adminMiddleware, PedidoController.delete);
 
+router.post("/:id/checkout", authMiddleware, PedidoController.criarCheckout);
+
 export default router;

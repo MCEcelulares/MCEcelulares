@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
+import { MulterError } from "multer";
 import { HttpError } from "../types/http_error";
 
 export const errorMiddleware = (
@@ -16,6 +17,18 @@ export const errorMiddleware = (
   if (error instanceof ZodError) {
     return res.status(400).json({
       message: error.issues.map((issue) => issue.message).join("\n"),
+    });
+  }
+
+  if (error instanceof MulterError) {
+    const mensagens: Record<string, string> = {
+      LIMIT_FILE_SIZE: "Arquivo muito grande. Tamanho máximo permitido: 5MB",
+      LIMIT_FILE_COUNT: "Muitos arquivos. Envie apenas uma imagem por vez",
+      LIMIT_UNEXPECTED_FILE: 'Campo de arquivo inesperado. Use o campo "imagem"',
+    };
+
+    return res.status(400).json({
+      message: mensagens[error.code] || `Erro no upload: ${error.message}`,
     });
   }
 

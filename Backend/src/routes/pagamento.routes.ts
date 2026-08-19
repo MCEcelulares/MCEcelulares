@@ -20,4 +20,6 @@ router.put("/:id", authMiddleware, adminMiddleware, validate(updatePagamentoSche
 
 router.delete("/:id", authMiddleware, adminMiddleware, PagamentoController.delete);
 
+router.post("/webhook", PagamentoController.webhook);
+
 export default router;

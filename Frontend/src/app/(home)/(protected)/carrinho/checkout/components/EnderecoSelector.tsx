@@ -1,27 +1,53 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/src/components/layout/Icon';
 import { useGetEnderecos } from '@/src/hooks/endereco/useGetEnderecos';
 import { useGetCarrinho } from '@/src/hooks/carrinho/useGetCarrinho';
 import { SubtotalCard } from '@/src/components/produtos/SubtotalCard';
-import { useCreatePedido } from '@/src/hooks/pedido/useCreatePedido';
 import { Button } from '@/src/components/layout/Button';
+import { useAuth } from '@/src/contexts/AuthContext';
 
 export const EnderecoSelector = () => {
   const router = useRouter();
+  const { token } = useAuth();
   const { execute: fetchEndereco, loading: loadingEndereco, enderecos } = useGetEnderecos();
   const { execute: fetchCarrinho, carrinho } = useGetCarrinho();
-  const { execute: createPedido, loading: loadingPedido } = useCreatePedido();
+  const [loadingPedido, setLoadingPedido] = useState(false);
 
   useEffect(() => { fetchEndereco(); }, [fetchEndereco]);
   useEffect(() => { fetchCarrinho(); }, [fetchCarrinho]);
 
   const handleClick = async (id_endereco: number) => {
-    const result = await createPedido(id_endereco);
-    if (result?.success) router.push('/pedidos');
+    setLoadingPedido(true);
+    try {
+      const resPedido = await fetch('/api/pedido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id_endereco }),
+      });
+      const pedido = await resPedido.json();
+      console.log('pedido criado:', pedido);
+
+      const resCheckout = await fetch(`/api/pedido/${pedido.id_pedido}/checkout`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const checkout = await resCheckout.json();
+      console.log('checkout criado:', checkout);
+
+      window.location.assign(checkout.checkout_url);
+    } catch (error) {
+      console.error('erro no checkout cru:', error);
+      setLoadingPedido(false);
+    }
   };
 
   if (loadingEndereco) {

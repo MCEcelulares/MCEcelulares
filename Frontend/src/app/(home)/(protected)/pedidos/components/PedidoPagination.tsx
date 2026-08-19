@@ -29,6 +29,9 @@ export const PedidoPagination = () => {
 
   return (
     <div className="flex flex-col gap-3">
+      <button onClick={() => fetchPedidos(currentPage)} className="text-xs text-purple-600 underline w-fit">
+        atualizar status
+      </button>
       {pedidos.map((pedido) => (
         <PedidoCard key={pedido.id_pedido} pedido={pedido} />
       ))}

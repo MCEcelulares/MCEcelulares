@@ -1,7 +1,7 @@
-// pedido.controllers.ts
 import { NextFunction, Request, Response } from "express";
 import Pedido from "../models/Pedido";
 import Carrinho from "../models/Carrinho";
+import { HttpError } from "../types/http_error";
 import { obterPaginacao } from "../utils/paginacao";
 import { fazerPaginacaoResponse } from "../utils/paginacaoResponse";
 import { findByIdOuErroPedido } from "../utils/FindByIdOuErro/findByIdOuErroPedido";
@@ -11,6 +11,7 @@ import { calcularValorTotal } from "../utils/calcularValorTotal";
 import { criarItensPedido } from "../utils/criarItensPedido";
 import { criarUsuarioPedido } from "../utils/criarUsuarioPedido";
 import { criarEnderecoPedido } from "../utils/criarEnderecoPedido";
+import { buscarPagamentoMercadoPago, criarPreferenciaPagamento } from "../services/mercadpago.service";
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
@@ -60,16 +61,23 @@ class PedidoController {
 
       return res.status(200).json(fazerPaginacaoResponse(page, limit, count, rows));
     } catch (error) {
-      console.error("[findAll] ERRO:", error);
       next(error);
     }
   }
 
   static async findById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const pedido = await findByIdOuErroPedido(Number(req.params.id), {
+      const { id } = req.params;
+
+      const pedido = await findByIdOuErroPedido(Number(id), {
         include: PEDIDO_INCLUDES,
       });
+
+      const dono = (pedido as any).usuarioPedido?.id_usuario;
+      if (dono !== req.userId && !req.isAdmin) {
+        return next(new HttpError(403, "Você não tem permissão para ver este pedido"));
+      }
+
       return res.status(200).json(pedido);
     } catch (error) {
       next(error);
@@ -95,10 +103,39 @@ class PedidoController {
     }
   }
 
+  static async criarCheckout(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      const pedido = await findByIdOuErroPedido(Number(id), {
+        include: [{ association: "itens" }, { association: "usuarioPedido" }],
+      });
+
+      const dono = (pedido as any).usuarioPedido?.id_usuario;
+      if (dono !== req.userId && !req.isAdmin) {
+        return next(new HttpError(403, "Você não tem permissão para pagar este pedido"));
+      }
+
+      if (pedido.status !== "AGUARDANDO_PAGAMENTO") {
+        return next(new HttpError(400, "Este pedido não está aguardando pagamento"));
+      }
+
+      const preference = await criarPreferenciaPagamento(pedido);
+
+      return res.status(200).json({ checkout_url: preference.init_point });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const pedido = await findByIdOuErroPedido(Number(req.params.id));
+      const { id } = req.params;
+
+      const pedido = await findByIdOuErroPedido(Number(id));
+
       await pedido.update(req.body);
+
       return res.status(200).json(pedido);
     } catch (error) {
       next(error);
@@ -107,8 +144,12 @@ class PedidoController {
 
   static async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const pedido = await findByIdOuErroPedido(Number(req.params.id));
-      await pedido.destroy();
+      const { id } = req.params;
+
+      const pedido = await findByIdOuErroPedido(Number(id));
+
+      await pedido.update({ ativo: false, status: "CANCELADO" });
+
       return res.status(204).send();
     } catch (error) {
       next(error);
