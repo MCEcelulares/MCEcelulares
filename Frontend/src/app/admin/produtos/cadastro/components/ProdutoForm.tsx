@@ -9,8 +9,9 @@ import { CategoriaDropdownAdm } from './CategoriaDropdownAdm';
 import { MarcaDropdownAdm } from './MarcaDropdownAdm';
 import { Input } from '@/src/components/layout/Input';
 import { validarImagem } from '@/src/lib/validarImagem';
+import { IMAGEM_PADRAO } from '@/src/lib/getImagemUrl';
 
-const IMAGEM_PADRAO_URL = 'https://res.cloudinary.com/dxahbqe6q/image/upload/v1781987185/zzzno-photo-lg_um76px.webp';
+const IMAGEM_PADRAO_URL = IMAGEM_PADRAO;
 
 export const ProdutoForm = () => {
     const router = useRouter();

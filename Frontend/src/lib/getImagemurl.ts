@@ -1,6 +1,6 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:3000';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
 
-const IMAGEM_PADRAO = 'https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem';
+export const IMAGEM_PADRAO = 'https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem';
 
 export function getImagemUrl(imagem?: string | null): string {
   if (!imagem) return IMAGEM_PADRAO;

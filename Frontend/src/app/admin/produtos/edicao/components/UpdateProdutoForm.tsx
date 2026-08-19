@@ -11,8 +11,8 @@ import { Button } from '@/src/components/layout/Button';
 import { CategoriaDropdownAdm } from '../../cadastro/components/CategoriaDropdownAdm';
 import { MarcaDropdownAdm } from '../../cadastro/components/MarcaDropdownAdm';
 import Image from 'next/image';
-import { validarImagem } from '@/src/lib/validarImagem'; 
-import { getImagemUrl } from '@/src/lib/getImagemurl';
+import { validarImagem } from '@/src/lib/validarImagem';
+import { getImagemUrl } from '@/src/lib/getImagemUrl';
 
 export const UpdateProdutoForm = () => {
   const searchParams = useSearchParams();
@@ -44,7 +44,6 @@ export const UpdateProdutoForm = () => {
     }
   }, [editando, produto]);
 
-  // Libera a URL de preview local ao trocar de imagem/sair da edição
   useEffect(() => {
     return () => {
       if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
@@ -68,9 +67,6 @@ export const UpdateProdutoForm = () => {
   };
 
   const handleSubmit = async (formData: FormData) => {
-    // Só manda o campo "imagem" se um arquivo novo de fato foi escolhido.
-    // Caso contrário removemos (o input file ainda entra no FormData como
-    // um File vazio) pra que o backend preserve a imagem atual do produto.
     if (!novoArquivoSelecionado) {
       formData.delete('imagem');
     }
@@ -194,7 +190,6 @@ export const UpdateProdutoForm = () => {
 
               <div>
                 {previewUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" />
                 )}
                 <input
@@ -320,7 +315,8 @@ export const UpdateProdutoForm = () => {
                   width={128}
                   height={128}
                   className="mt-2 h-32 object-contain rounded-2xl bg-white p-2"
-                />
+                  unoptimized
+                />  
               </div>
             </div>
           )}

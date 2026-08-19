@@ -6,6 +6,7 @@ import { useGetProduto } from '@/src/hooks/produto/useGetProduto';
 import { useCreateItemCarrinho } from '@/src/hooks/carrinho/useCreateItemCarrinho';
 import { Button } from '@/src/components/layout/Button';
 import Image from 'next/image';
+import { getImagemUrl } from '@/src/lib/getImagemUrl';
 
 export const ProdutoDetails = () => {
     const searchParams = useSearchParams();
@@ -17,7 +18,7 @@ export const ProdutoDetails = () => {
 
     useEffect(() => {
         buscarProduto(id);
-    }, [id,buscarProduto]);
+    }, [id, buscarProduto]);
 
     const handleAdd = async () => {
 
@@ -43,11 +44,12 @@ export const ProdutoDetails = () => {
         <div className="flex h-[calc(100vh-80px)]">
             <div className="w-1/2 bg-[#E5E7EB]/40 flex items-center justify-center p-12">
                 <Image
-                    src={produto.imagem ?? "https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem"}
+                    src={getImagemUrl(produto.imagem)}
                     alt={produto.nome}
                     className="object-contain max-h-full max-w-full"
                     width={500}
                     height={0}
+                    unoptimized
                 />
             </div>
 
