@@ -5,6 +5,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useCreateItemCarrinho } from "../../hooks/carrinho/useCreateItemCarrinho";
 import { Button } from "../layout/Button";
 import Image from "next/image";
+import { getImagemUrl } from "@/src/lib/getImagemUrl";
 
 interface ProdutoCardProps {
   produto: ProdutoType;
@@ -30,11 +31,12 @@ export const ProdutoCard = ({ produto }: ProdutoCardProps) => {
         className="bg-[#E5E7EB] p-5 flex items-center justify-center relative h-[160px] bg-produto-pattern bg-repeat bg-center shrink-0 cursor-pointer overflow-hidden"
       >
         <Image
-          src={produto.imagem ?? "https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem"}
+          src={getImagemUrl(produto.imagem)}
           alt={produto.nome}
           className="object-contain max-h-full max-w-[200px]"
           width={130}
           height={0}
+          unoptimized
         />
       </div>
 

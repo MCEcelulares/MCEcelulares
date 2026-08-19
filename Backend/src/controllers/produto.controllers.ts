@@ -54,12 +54,13 @@ static async findAll(req: Request, res: Response, next: NextFunction) {
         descricao,
         preco,
         estoque,
-        imagem,
         destaque,
         ativo,
         id_marca,
         id_categoria,
       } = req.body;
+
+      const imagem = req.file ? `/uploads/${req.file.filename}` : null;
 
       const produto = await Produto.create({
         nome,
@@ -86,6 +87,10 @@ static async findAll(req: Request, res: Response, next: NextFunction) {
       const produto = await findByIdOuErroProduto(Number(id));
 
       const dados = req.body;
+
+      if (req.file) {
+        dados.imagem = `/uploads/${req.file.filename}`;
+      }
 
       await produto.update(dados);
 
