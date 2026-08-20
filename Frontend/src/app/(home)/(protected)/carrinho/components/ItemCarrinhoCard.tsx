@@ -3,6 +3,7 @@
 import { Button } from "@/src/components/layout/Button";
 import { useDeleteItemCarrinho } from "@/src/hooks/carrinho/useDeleteItemCarrinho";
 import { useUpdateItemCarrinho } from "@/src/hooks/carrinho/useUpdateItemCarrinho";
+import { getImagemUrl } from "@/src/lib/getImagemUrl";
 import Image from "next/image";
 
 interface CartItemCardProps {
@@ -20,11 +21,12 @@ export const ItemCarrinhoCard = ({ item, onUpdate }: CartItemCardProps) => {
             <div className="flex items-center gap-6">
                 <div className="w-24 h-24 flex items-center justify-center overflow-hidden">
                     <Image
-                        src={item.produto.imagem ?? 'https://placehold.co/200x200/e5e7eb/9ca3af/png?text=Sem+imagem'}
+                        src={getImagemUrl(item.produto.imagem)}
                         alt={item.produto.nome}
                         className="w-full h-full object-contain"
                         width={100}
                         height={0}
+                        unoptimized
                     />
                 </div>
 
