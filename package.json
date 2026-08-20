@@ -26,6 +26,7 @@
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "@playwright/test": "^1.60.0",
+    "@types/multer": "^2.2.0",
     "@types/node": "^25.9.2"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mercadopago": "^3.4.0",
+    "multer": "^2.2.0",
     "mysql2": "^3.18.2",
     "pg": "^8.19.0",
     "pg-hstore": "^2.3.4",
