@@ -13,6 +13,7 @@ import pagamentoRoutes from "./pagamento.routes";
 import enderecoPedidoRoutes from "./enderecopedido.routes";
 import usuarioPedidoRoutes from "./usuariopedido.routes";
 import authRoutes from "./auth.routes";
+import contatoRoutes from "./contato.routes";
 
 const router = Router();
 
@@ -29,5 +30,6 @@ router.use("/pagamento", pagamentoRoutes);
 router.use("/enderecopedido", enderecoPedidoRoutes);
 router.use("/usuariopedido", usuarioPedidoRoutes);
 router.use("/auth", authRoutes);
+router.use("/contato", contatoRoutes);
 
 export default router;
