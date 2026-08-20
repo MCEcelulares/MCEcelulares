@@ -1,6 +1,8 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 function escapeHtml(value: unknown): string {
   return String(value ?? "")
@@ -26,6 +28,8 @@ class ContatoService {
     const email = escapeHtml(input.email);
     const assunto = escapeHtml(input.assunto);
     const mensagem = escapeHtml(input.mensagem);
+
+    const resend = getResendClient();
 
     await resend.emails.send({
       from: "Contato App <onboarding@resend.dev>",
