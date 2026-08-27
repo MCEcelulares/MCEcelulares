@@ -7,10 +7,13 @@ import { CategoriaDropdown } from '../../../../components/produtos/CategoriaDrop
 import { MarcaCard } from './MarcaCard';
 import { Icon } from '@/src/components/layout/Icon';
 import { AtivoDropdown } from '../../components/AtivoDropdown';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const MarcaList = () => {
     const router = useRouter();
     const { execute, marcas, loading, error } = useGetMarcas();
+    const { hasPermissao } = useAuth();
     const [idCategoria, setIdCategoria] = useState('');
     const [ativo, setAtivo] = useState('');
 
@@ -35,10 +38,11 @@ export const MarcaList = () => {
                 <CategoriaDropdown variant="white" value={idCategoria} onChange={handleCategoriaChange} />
                 <AtivoDropdown value={ativo} onChange={handleAtivoChange} />
 
-                <button
-                    data-testid="create-marca-button"
-                    onClick={() => router.push('/admin/marcas/cadastro')}
-                    className="
+                {hasPermissao(PERMISSOES.CRIAR_MARCA) && (
+                    <button
+                        data-testid="create-marca-button"
+                        onClick={() => router.push('/admin/marcas/cadastro')}
+                        className="
         appearance-none cursor-pointer
         bg-white hover:bg-gray-50
         text-gray-800 font-medium text-sm
@@ -48,10 +52,11 @@ export const MarcaList = () => {
         transition-colors duration-150
         disabled:cursor-not-allowed disabled:opacity-50
                     "
-                >
-                    Adicionar marca
-                    <Icon name='faPlus' className='pl-2' />
-                </button>
+                    >
+                        Adicionar marca
+                        <Icon name='faPlus' className='pl-2' />
+                    </button>
+                )}
             </div>
 
             {loading && <p data-testid="loading-marcas" className="text-center font-medium text-gray-400 animate-pulse">Carregando marcas...</p>}

@@ -6,18 +6,21 @@ import { findByIdOuErroItemCarrinho } from "../utils/FindByIdOuErro/findByIdOuEr
 import { findByIdOuErroProduto } from "../utils/FindByIdOuErro/findByIdOuErroProduto";
 import { atualizarQuantidadeItem } from "../utils/atualizarQuantidadeItem";
 import { validarProdutoDisponivel } from "../utils/validarProdutoDisponivel";
-import { salvarOuAtualizarItemCarrinho} from "../utils/salvarOuAtualizarItemCarrinho";
+import { salvarOuAtualizarItemCarrinho } from "../utils/salvarOuAtualizarItemCarrinho";
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
-  isAdmin?: boolean;
 }
 
 class ItemCarrinhoController {
-  static async findAll(req: Request, res: Response, next: NextFunction) {
+
+  static async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const itensCarrinho = await ItemCarrinho.findAll({
-        include: ["carrinho", "produto"],
+        include: [
+          { association: "carrinho", where: { id_usuario: req.userId }, required: true },
+          "produto",
+        ],
       });
 
       return res.status(200).json(itensCarrinho);
@@ -91,7 +94,7 @@ class ItemCarrinhoController {
       });
 
       const carrinhoDoItem = (itemCarrinho as any).carrinho;
-      if (carrinhoDoItem?.id_usuario !== req.userId && !req.isAdmin) {
+      if (carrinhoDoItem?.id_usuario !== req.userId) {
         return next(new HttpError(403, "Você não tem permissão para alterar este item"));
       }
 
@@ -121,7 +124,7 @@ class ItemCarrinhoController {
       });
 
       const carrinhoDoItem = (itemCarrinho as any).carrinho;
-      if (carrinhoDoItem?.id_usuario !== req.userId && !req.isAdmin) {
+      if (carrinhoDoItem?.id_usuario !== req.userId) {
         return next(new HttpError(403, "Você não tem permissão para remover este item"));
       }
 

@@ -8,11 +8,14 @@ import { useDeleteCategoria } from '@/src/hooks/categoria/useDeleteCategoria';
 import { Icon } from '@/src/components/layout/Icon';
 import { Input } from '@/src/components/layout/Input';
 import { Button } from '@/src/components/layout/Button';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const UpdateCategoriaForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = Number(searchParams.get('id'));
+  const { hasPermissao } = useAuth();
 
   const { execute: fetchCategorias, categorias, loading } = useGetCategorias();
   const { execute: updateCategoria, loading: atualizando } = useUpdateCategoria();
@@ -62,17 +65,21 @@ export const UpdateCategoriaForm = () => {
             </h2>
             {!loading && categoriaLocal && (
               <div className="flex items-center gap-3">
-                <Button
-                  icon={editando ? 'faXmark' : 'faPen'}
-                  onClick={() => setEditando(!editando)}
-                  className="text-purple-700 hover:opacity-75 transition-opacity"
-                />
-                <Button
-                  icon="faTrash"
-                  onClick={handleDelete}
-                  disabled={excluindo}
-                  className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
-                />
+                {hasPermissao(PERMISSOES.EDITAR_CATEGORIA) && (
+                  <Button
+                    icon={editando ? 'faXmark' : 'faPen'}
+                    onClick={() => setEditando(!editando)}
+                    className="text-purple-700 hover:opacity-75 transition-opacity"
+                  />
+                )}
+                {hasPermissao(PERMISSOES.EXCLUIR_CATEGORIA) && (
+                  <Button
+                    icon="faTrash"
+                    onClick={handleDelete}
+                    disabled={excluindo}
+                    className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => router.back()}

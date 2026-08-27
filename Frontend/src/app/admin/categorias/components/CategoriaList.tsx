@@ -6,10 +6,13 @@ import { useGetCategorias } from '@/src/hooks/categoria/useGetCategorias';
 import { CategoriaCard } from './CategoriaCard';
 import { Icon } from '@/src/components/layout/Icon';
 import { AtivoDropdown } from '../../components/AtivoDropdown';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const CategoriaList = () => {
     const router = useRouter();
     const { execute, categorias, loading, error } = useGetCategorias();
+    const { hasPermissao } = useAuth();
     const [ativo, setAtivo] = useState('');
 
     const handleAtivoChange = (value: string) => {
@@ -25,9 +28,10 @@ export const CategoriaList = () => {
             <div className="flex justify-center items-center gap-10 mb-10">
                 <AtivoDropdown value={ativo} onChange={handleAtivoChange} />
 
-                <button
-                    onClick={() => router.push('/admin/categorias/cadastro')}
-                    className="
+                {hasPermissao(PERMISSOES.CRIAR_CATEGORIA) && (
+                    <button
+                        onClick={() => router.push('/admin/categorias/cadastro')}
+                        className="
         appearance-none cursor-pointer
         bg-white hover:bg-gray-50
         text-gray-800 font-medium text-sm
@@ -37,10 +41,11 @@ export const CategoriaList = () => {
         transition-colors duration-150
         disabled:cursor-not-allowed disabled:opacity-50
                     "
-                >
-                    Adicionar categoria
-                    <Icon name='faPlus' className='pl-2'/>
-                </button>
+                    >
+                        Adicionar categoria
+                        <Icon name='faPlus' className='pl-2'/>
+                    </button>
+                )}
             </div>
 
             {loading && <p className="text-center font-medium text-gray-400 animate-pulse">Carregando categorias...</p>}

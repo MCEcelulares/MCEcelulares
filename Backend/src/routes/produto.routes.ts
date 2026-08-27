@@ -2,7 +2,7 @@ import { Router } from "express";
 import ProdutoController from "../controllers/produto.controllers";
 import { validate } from "../middlewares/validate.middleware";
 import authMiddleware from "../middlewares/auth.middleware";
-import adminMiddleware from "../middlewares/admin.middleware";
+import { checarPermissao } from "../middlewares/permissao.middleware";
 import uploadProdutoImagem from "../middlewares/upload.middleware";
 import {
   createProdutoSchema,
@@ -12,27 +12,26 @@ import {
 const router = Router();
 
 router.get("/", ProdutoController.findAll);
+router.get("/:id", ProdutoController.findById);
 
 router.post(
   "/",
   authMiddleware,
-  adminMiddleware,
+  checarPermissao("criar_produto"),
   uploadProdutoImagem,
   validate(createProdutoSchema),
   ProdutoController.create
 );
 
-router.get("/:id", ProdutoController.findById);
-
 router.put(
   "/:id",
   authMiddleware,
-  adminMiddleware,
+  checarPermissao("editar_produto"),
   uploadProdutoImagem,
   validate(updateProdutoSchema),
   ProdutoController.update
 );
 
-router.delete("/:id", authMiddleware, adminMiddleware, ProdutoController.delete);
+router.delete("/:id", authMiddleware, checarPermissao("excluir_produto"), ProdutoController.delete);
 
 export default router;

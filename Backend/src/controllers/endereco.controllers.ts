@@ -5,22 +5,12 @@ import { findByIdOuErroEndereco } from "../utils/FindByIdOuErro/findByIdOuErroEn
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
-  isAdmin?: boolean;
 }
 
 class EnderecoController {
   static async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const { id_usuario } = req.query;
-
-      let where: Record<string, any>;
-      if (req.isAdmin) {
-        where = id_usuario ? { id_usuario: Number(id_usuario) } : {};
-      } else {
-        where = { id_usuario: req.userId };
-      }
-
-      const enderecos = await Endereco.findAll({ where });
+      const enderecos = await Endereco.findAll({ where: { id_usuario: req.userId } });
 
       return res.status(200).json(enderecos);
     } catch (error) {
@@ -36,7 +26,7 @@ class EnderecoController {
         include: ["usuario"],
       });
 
-      if (req.userId !== endereco.id_usuario && !req.isAdmin) {
+      if (req.userId !== endereco.id_usuario) {
         return next(new HttpError(403, "Você não tem permissão para acessar este endereço"));
       }
 
@@ -74,7 +64,7 @@ class EnderecoController {
 
       const enderecoEncontrado = await findByIdOuErroEndereco(Number(id));
 
-      if (req.userId !== enderecoEncontrado.id_usuario && !req.isAdmin) {
+      if (req.userId !== enderecoEncontrado.id_usuario) {
         return next(new HttpError(403, "Você não tem permissão para alterar este endereço"));
       }
 
@@ -92,7 +82,7 @@ class EnderecoController {
 
       const endereco = await findByIdOuErroEndereco(Number(id));
 
-      if (req.userId !== endereco.id_usuario && !req.isAdmin) {
+      if (req.userId !== endereco.id_usuario) {
         return next(new HttpError(403, "Você não tem permissão para excluir este endereço"));
       }
 

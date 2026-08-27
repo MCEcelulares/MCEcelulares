@@ -5,5 +5,4 @@ export type UsuarioInput = {
     cpf: string;
     telefone: string;
     ativo?: boolean;
-    admin?: boolean;
 };

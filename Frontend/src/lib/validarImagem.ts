@@ -1,4 +1,4 @@
-const TAMANHO_MAXIMO_BYTES = 5 * 1024 * 1024; // 5MB
+const TAMANHO_MAXIMO_BYTES = 5 * 1024 * 1024;
 
 const TIPOS_PERMITIDOS = [
     'image/jpeg',

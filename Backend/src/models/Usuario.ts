@@ -9,7 +9,6 @@ class Usuario extends Model{
     declare cpf: string;
     declare telefone: string;
     declare ativo: boolean;
-    declare admin: boolean;
 }
 
 Usuario.init({
@@ -42,10 +41,6 @@ Usuario.init({
     ativo: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
-    },
-    admin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
     }
 }, {
     sequelize,
