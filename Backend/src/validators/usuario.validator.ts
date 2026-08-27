@@ -27,7 +27,6 @@ export const createUsuarioSchema = z.object({
     .max(15, "Telefone inválido"),
 
   ativo: z.boolean({ error: "Campo ativo deve ser verdadeiro ou falso" }).optional(),
-  admin: z.boolean({ error: "Campo admin deve ser verdadeiro ou falso" }).optional(),
 });
 
 export const updateUsuarioSchema = z.object({
@@ -56,7 +55,6 @@ export const updateUsuarioSchema = z.object({
     .optional(),
 
   ativo: z.boolean({ error: "Campo ativo deve ser verdadeiro ou falso" }).optional(),
-  admin: z.boolean({ error: "Campo admin deve ser verdadeiro ou falso" }).optional(),
 });
 
 export const loginUsuarioSchema = z.object({

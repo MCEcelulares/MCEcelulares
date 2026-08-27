@@ -15,7 +15,7 @@ import { buscarPagamentoMercadoPago, criarPreferenciaPagamento } from "../servic
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
-  isAdmin?: boolean;
+  permissoes?: string[];
 }
 
 const PEDIDO_INCLUDES = [
@@ -25,14 +25,17 @@ const PEDIDO_INCLUDES = [
 ];
 
 class PedidoController {
+
   static async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { page, limit } = obterPaginacao(req.query);
       const { id_usuario, status } = req.query;
 
+      const podeVerTodos = req.permissoes?.includes("visualizar_pedido") ?? false;
+
       const includeUsuarioPedido: Record<string, any> = { association: "usuarioPedido" };
 
-      if (req.isAdmin) {
+      if (podeVerTodos) {
         if (id_usuario) {
           includeUsuarioPedido.where = { id_usuario: Number(id_usuario) };
           includeUsuarioPedido.required = true;
@@ -74,7 +77,9 @@ class PedidoController {
       });
 
       const dono = (pedido as any).usuarioPedido?.id_usuario;
-      if (dono !== req.userId && !req.isAdmin) {
+      const podeVerTodos = req.permissoes?.includes("visualizar_pedido") ?? false;
+
+      if (dono !== req.userId && !podeVerTodos) {
         return next(new HttpError(403, "Você não tem permissão para ver este pedido"));
       }
 
@@ -112,7 +117,9 @@ class PedidoController {
       });
 
       const dono = (pedido as any).usuarioPedido?.id_usuario;
-      if (dono !== req.userId && !req.isAdmin) {
+      const podeGerenciar = req.permissoes?.includes("gerenciar_pedido") ?? false;
+
+      if (dono !== req.userId && !podeGerenciar) {
         return next(new HttpError(403, "Você não tem permissão para pagar este pedido"));
       }
 
@@ -123,6 +130,21 @@ class PedidoController {
       const preference = await criarPreferenciaPagamento(pedido);
 
       return res.status(200).json({ checkout_url: preference.init_point });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateStatus(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      const pedido = await findByIdOuErroPedido(Number(id));
+
+      await pedido.update({ status });
+
+      return res.status(200).json(pedido);
     } catch (error) {
       next(error);
     }

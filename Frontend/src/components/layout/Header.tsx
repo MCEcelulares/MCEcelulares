@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useAuth } from "@/src/contexts/AuthContext";
+import { PERMISSOES_PAINEL } from "@/src/lib/permissoes";
 import { Icon } from "./Icon";
 import { LogoutButton } from "./LogoutButton";
 
@@ -13,7 +14,7 @@ const formatNome = (nome: string) =>
   nome.length > MAX_NOME_LENGTH ? nome.slice(0, MAX_NOME_LENGTH).trimEnd() + "..." : nome;
 
 export const Header = () => {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated, isLoading, user, hasAnyPermissao } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -65,7 +66,7 @@ export const Header = () => {
               <Icon name="faCircleUser" className="w-5 text-white group-hover:text-gray-200" size="2xl" />
             </Link>
             <LogoutButton />
-            {user?.admin && (
+            {hasAnyPermissao(PERMISSOES_PAINEL) && (
               <Link href="/admin" className="flex items-center gap-2 transition-transform group hover:text-gray-200" data-testid="admin-button">
                 <Icon name="faUsersGear" className="w-5 text-white group-hover:text-gray-200" size="xl" />
               </Link>
@@ -139,7 +140,7 @@ export const Header = () => {
                   </span>
                 </Link>
                 <div className="flex items-center gap-3">
-                  {user?.admin && (
+                  {hasAnyPermissao(PERMISSOES_PAINEL) && (
                     <Link
                       href="/admin"
                       onClick={() => setMenuOpen(false)}

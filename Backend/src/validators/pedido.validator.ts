@@ -24,3 +24,9 @@ export const updatePedidoSchema = z.object({
     error: "Status inválido",
   }).optional(),
 });
+
+export const updateStatusPedidoSchema = z.object({
+  status: z.enum(["AGUARDANDO_PAGAMENTO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"], {
+    error: "Status inválido",
+  }),
+});

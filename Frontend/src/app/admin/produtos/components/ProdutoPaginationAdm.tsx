@@ -10,11 +10,14 @@ import { MarcaDropdown } from "../../../../components/produtos/MarcaDropdown";
 import { ProdutoCardAdm } from "./ProdutoCardAdm";
 import { Icon } from "@/src/components/layout/Icon";
 import { AtivoDropdown } from "../../components/AtivoDropdown";
+import { useAuth } from "@/src/contexts/AuthContext";
+import { PERMISSOES } from "@/src/lib/permissoes";
 
 export const ProdutoPaginationAdm = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { execute, produtos, totalPages, loading, error } = useGetProdutos();
+    const { hasPermissao } = useAuth();
     const [currentPage, setCurrentPage] = useState(1);
     const [idCategoria, setIdCategoria] = useState(searchParams.get('id_categoria') ?? '');
     const [idMarca, setIdMarca] = useState('');
@@ -53,9 +56,10 @@ export const ProdutoPaginationAdm = () => {
                 <MarcaDropdown variant="white" value={idMarca} onChange={handleMarcaChange} id_categoria={idCategoria} />
                 <AtivoDropdown value={ativo} onChange={handleAtivoChange} />
 
-                <button
-                    onClick={() => router.push('/admin/produtos/cadastro')}
-                    className="
+                {hasPermissao(PERMISSOES.CRIAR_PRODUTO) && (
+                    <button
+                        onClick={() => router.push('/admin/produtos/cadastro')}
+                        className="
         appearance-none cursor-pointer
         bg-white hover:bg-gray-50
         text-gray-800 font-medium text-sm
@@ -65,11 +69,12 @@ export const ProdutoPaginationAdm = () => {
         transition-colors duration-150
         disabled:cursor-not-allowed disabled:opacity-50
                     "
-                    data-testid="create-produto-button"
-                >
-                    Adicionar produto
-                    <Icon name='faPlus' className='pl-2' />
-                </button>
+                        data-testid="create-produto-button"
+                    >
+                        Adicionar produto
+                        <Icon name='faPlus' className='pl-2' />
+                    </button>
+                )}
             </div>
 
             {loading && (

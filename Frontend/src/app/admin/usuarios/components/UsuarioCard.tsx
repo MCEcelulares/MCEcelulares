@@ -42,12 +42,10 @@ export const UsuarioCard = ({ usuario }: UsuarioCardProps) => {
                     <span className="text-gray-400 text-xs font-mono">
                         #{usuario.id_usuario}
                     </span>
-                    <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
-                        usuario.admin
-                            ? 'bg-purple-100 text-purple-700'
-                            : 'bg-gray-100 text-gray-500'
-                    }`}>
-                        {usuario.admin ? 'Admin' : 'Cliente'}
+                    <span className="text-xs font-medium px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                        {usuario.cargos && usuario.cargos.length > 0
+                            ? usuario.cargos.map((c) => c.nome).join(', ')
+                            : 'Cliente'}
                     </span>
                 </div>
             </div>

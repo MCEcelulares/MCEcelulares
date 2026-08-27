@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import ProdutoCount from './components/ProdutoCount';
 import PedidoCount from './components/PedidoCount';
 import UsuarioCount from './components/UsuarioCount';
@@ -6,8 +10,21 @@ import { PedidoNew } from './components/PedidoNew';
 import { BestSellers } from './components/BestSellers';
 import { QuickActions } from './components/QuickActions';
 import { PedidosAdmProvider } from '@/src/contexts/PedidosAdmContext';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { getRotaInicialPainel, PERMISSOES } from '@/src/lib/permissoes';
 
 const Admin = () => {
+  const { user, hasPermissao } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && !hasPermissao(PERMISSOES.VISUALIZAR_DASHBOARD)) {
+      router.replace(getRotaInicialPainel(user.permissoes));
+    }
+  }, [user, hasPermissao, router]);
+
+  if (!user || !hasPermissao(PERMISSOES.VISUALIZAR_DASHBOARD)) return null;
+
   return (
     <div className="flex flex-col gap-8 w-full max-w-5xl mx-auto">
 
@@ -36,4 +53,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Admin;   

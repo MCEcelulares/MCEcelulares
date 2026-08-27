@@ -22,7 +22,7 @@ export const ProdutoCarousel = ({ destaque }: ProdutoCarouselProps) => {
     }, [execute, destaque]);
 
     const settings = {
-        dots: true, // Mantém os dots ativos por padrão (para 4, 3 e 2 itens)
+        dots: true,
         infinite: produtos.length > 1,
         speed: 500,
         slidesToShow: 4,

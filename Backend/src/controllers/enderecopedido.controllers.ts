@@ -9,22 +9,15 @@ interface AuthenticatedRequest extends Request {
 }
 
 class EnderecoPedidoController {
-    static async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    static async findAll(req: Request, res: Response, next: NextFunction) {
         try {
             const { id_pedido } = req.query;
 
             const where = id_pedido ? { id_pedido: Number(id_pedido) } : {};
-            const include = req.isAdmin
-                ? ["pedido"]
-                : [{
-                    association: "pedido",
-                    where: { id_usuario: req.userId },
-                    required: true,
-                }];
 
             const enderecosPedido = await EnderecoPedido.findAll({
                 where,
-                include,
+                include: ["pedido"],
             });
 
             return res.status(200).json(enderecosPedido);
@@ -33,17 +26,13 @@ class EnderecoPedidoController {
         }
     }
 
-    static async findById(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    static async findById(req: Request, res: Response, next: NextFunction) {
         try {
             const { id } = req.params;
 
             const enderecoPedidos = await findByIdOuErroEnderecoPedido(Number(id), {
                 include: ["pedido"],
             });
-
-            if (!req.isAdmin) {
-                const pedido = await Pedido.findByPk(enderecoPedidos.id_pedido);
-            }
 
             return res.status(200).json(enderecoPedidos);
         } catch (error) {

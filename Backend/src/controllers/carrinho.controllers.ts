@@ -5,7 +5,6 @@ import { findByIdOuErroCarrinho } from "../utils/FindByIdOuErro/findByIdOuErroCa
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
-  isAdmin?: boolean;
 }
 
 class CarrinhoController {
@@ -53,27 +52,31 @@ class CarrinhoController {
     }
   }
 
-static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  try {
-    const { id } = req.params;
-    const carrinho = await findByIdOuErroCarrinho(Number(id));
+  static async update(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const carrinho = await findByIdOuErroCarrinho(Number(id));
 
-    if (carrinho.id_usuario !== req.userId && !req.isAdmin) {
-      return next(new HttpError(403, "Você não tem permissão para alterar este carrinho"));
+      if (carrinho.id_usuario !== req.userId) {
+        return next(new HttpError(403, "Você não tem permissão para alterar este carrinho"));
+      }
+
+      await carrinho.update(req.body);
+      return res.status(200).json(carrinho);
+    } catch (error) {
+      next(error);
     }
-
-    await carrinho.update(req.body);
-    return res.status(200).json(carrinho);
-  } catch (error) {
-    next(error);
   }
-}
 
-  static async delete(req: Request, res: Response, next: NextFunction) {
+  static async delete(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
 
       const carrinho = await findByIdOuErroCarrinho(Number(id));
+
+      if (carrinho.id_usuario !== req.userId) {
+        return next(new HttpError(403, "Você não tem permissão para excluir este carrinho"));
+      }
 
       await carrinho.destroy();
 

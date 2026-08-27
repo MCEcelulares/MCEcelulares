@@ -5,7 +5,7 @@ import { createContext, useState, useEffect, useContext, ReactNode, useCallback 
 interface User {
   id: number;
   nome: string;
-  admin: boolean;
+  permissoes: string[];
 }
 
 interface AuthContextData {
@@ -13,9 +13,11 @@ interface AuthContextData {
   isLoading: boolean;
   token: string | null;
   user: User | null;
-  login: (token: string, id: number, nome: string, admin: boolean) => void;
+  login: (token: string, id: number, nome: string, permissoes: string[]) => void;
   logout: () => void;
   updateNome: (nome: string) => void;
+  hasPermissao: (permissao: string) => boolean;
+  hasAnyPermissao: (permissoes: string[]) => boolean;
 }
 
 interface AuthProviderProps {
@@ -34,7 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('id_usuario');
     localStorage.removeItem('nome_usuario');
-    localStorage.removeItem('admin');
+    localStorage.removeItem('permissoes');
 
     setToken(null);
     setUser(null);
@@ -45,12 +47,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const savedToken = localStorage.getItem('auth_token');
     const savedUserId = localStorage.getItem('id_usuario');
     const savedNome = localStorage.getItem('nome_usuario');
-    const savedAdmin = localStorage.getItem('admin');
+    const savedPermissoes = localStorage.getItem('permissoes');
 
     if (savedToken) {
       setIsAuthenticated(true);
       setToken(savedToken);
-      setUser(savedUserId ? { id: Number(savedUserId), nome: savedNome ?? '', admin: savedAdmin === 'true' } : null);
+      setUser(
+        savedUserId
+          ? {
+              id: Number(savedUserId),
+              nome: savedNome ?? '',
+              permissoes: savedPermissoes ? JSON.parse(savedPermissoes) : [],
+            }
+          : null
+      );
     }
 
     setIsLoading(false);
@@ -66,24 +76,36 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => window.removeEventListener('auth:logout', handleAuthLogout);
   }, [logout]);
 
-  const login = useCallback((token: string, id: number, nome: string, admin: boolean) => {
+  const login = useCallback((token: string, id: number, nome: string, permissoes: string[]) => {
     localStorage.setItem('auth_token', token);
     localStorage.setItem('id_usuario', String(id));
     localStorage.setItem('nome_usuario', nome);
-    localStorage.setItem('admin', String(admin));
+    localStorage.setItem('permissoes', JSON.stringify(permissoes));
 
     setToken(token);
-    setUser({ id, nome, admin });
+    setUser({ id, nome, permissoes });
     setIsAuthenticated(true);
   }, []);
 
   const updateNome = useCallback((nome: string) => {
     localStorage.setItem('nome_usuario', nome);
-    setUser((prev) => prev ? { ...prev, nome } : prev);
+    setUser((prev) => (prev ? { ...prev, nome } : prev));
   }, []);
 
+  const hasPermissao = useCallback(
+    (permissao: string) => user?.permissoes?.includes(permissao) ?? false,
+    [user]
+  );
+
+  const hasAnyPermissao = useCallback(
+    (permissoes: string[]) => permissoes.some((p) => user?.permissoes?.includes(p)) ?? false,
+    [user]
+  );
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, token, user, login, logout, updateNome }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isLoading, token, user, login, logout, updateNome, hasPermissao, hasAnyPermissao }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/src/contexts/AuthContext';
 import { getUsuarioAPI } from '@/src/actions/usuario';
-import { Icon } from '@/src/components/layout/Icon'; 
+import { Icon } from '@/src/components/layout/Icon';
 
 const UsuarioDetalhes = () => {
     const searchParams = useSearchParams();
@@ -20,7 +20,7 @@ const UsuarioDetalhes = () => {
         if (!id || !token) return;
 
         setLoading(true);
-        getUsuarioAPI(token, { id_usuario: Number(id) })
+        getUsuarioAPI(token)
             .then((data) => {
                 if (!data.success) throw new Error(data.error);
                 setUsuario(data.usuario!);
@@ -72,15 +72,14 @@ const UsuarioDetalhes = () => {
                     <h1 className="text-xl font-bold text-gray-800">{usuario.nome}</h1>
                     <p className="text-gray-500 text-sm">{usuario.email}</p>
                     <div className="flex gap-2 mt-1">
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${usuario.admin
-                                ? 'bg-purple-100 text-purple-700'
-                                : 'bg-gray-100 text-gray-500'
-                            }`}>
-                            {usuario.admin ? 'Administrador' : 'Cliente'}
+                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                            {usuario.cargos && usuario.cargos.length > 0
+                                ? usuario.cargos.map((c) => c.nome).join(', ')
+                                : 'Cliente'}
                         </span>
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${usuario.ativo
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-600'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-600'
                             }`}>
                             {usuario.ativo ? 'Ativo' : 'Inativo'}
                         </span>

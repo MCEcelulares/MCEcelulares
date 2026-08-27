@@ -8,11 +8,14 @@ import { useDeleteMarca } from '@/src/hooks/marca/useDeleteMarca';
 import { Icon } from '@/src/components/layout/Icon';
 import { Input } from '@/src/components/layout/Input';
 import { Button } from '@/src/components/layout/Button';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const UpdateMarcaForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = Number(searchParams.get('id'));
+  const { hasPermissao } = useAuth();
 
   const { execute: fetchMarcas, marcas, loading } = useGetMarcas();
   const { execute: updateMarca, loading: atualizando } = useUpdateMarca();
@@ -61,19 +64,23 @@ export const UpdateMarcaForm = () => {
             </h2>
             {!loading && marcaLocal && (
               <div className="flex items-center gap-3">
-                <Button
-                  data-testid="btn-editar-marca"
-                  icon={editando ? 'faXmark' : 'faPen'}
-                  onClick={() => setEditando(!editando)}
-                  className="text-purple-700 hover:opacity-75 transition-opacity"
-                />
-                <Button
-                  data-testid="btn-excluir-marca"
-                  icon="faTrash"
-                  onClick={handleDelete}
-                  disabled={excluindo}
-                  className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
-                />
+                {hasPermissao(PERMISSOES.EDITAR_MARCA) && (
+                  <Button
+                    data-testid="btn-editar-marca"
+                    icon={editando ? 'faXmark' : 'faPen'}
+                    onClick={() => setEditando(!editando)}
+                    className="text-purple-700 hover:opacity-75 transition-opacity"
+                  />
+                )}
+                {hasPermissao(PERMISSOES.EXCLUIR_MARCA) && (
+                  <Button
+                    data-testid="btn-excluir-marca"
+                    icon="faTrash"
+                    onClick={handleDelete}
+                    disabled={excluindo}
+                    className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => router.back()}
