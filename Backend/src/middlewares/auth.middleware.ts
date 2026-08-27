@@ -4,12 +4,12 @@ import { HttpError } from "../types/http_error";
 
 interface TokenPayload {
   id_usuario: number;
-  admin: boolean;
+  permissoes: string[];
 }
 
 interface AuthenticatedRequest extends Request {
   userId?: number;
-  isAdmin?: boolean;
+  permissoes?: string[];
 }
 
 function authMiddleware(
@@ -32,7 +32,7 @@ function authMiddleware(
     ) as TokenPayload;
 
     req.userId = decoded.id_usuario;
-    req.isAdmin = decoded.admin;
+    req.permissoes = decoded.permissoes ?? [];
 
     return next();
   } catch (error) {

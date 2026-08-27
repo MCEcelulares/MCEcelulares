@@ -21,7 +21,7 @@ export async function loginAPI(formData: FormData) {
       id_usuario: data.id_usuario as number,
       nome: data.nome,
       token: data.token as string,
-      admin: data.admin as boolean,
+      permissoes: (data.permissoes as string[]) ?? [],
     };
   } catch (error) {
     return {

@@ -62,8 +62,8 @@ export async function getPedidoAPI(body: { id_pedido: number }, token: string) {
 
 export async function updatePedidoStatusAPI(token: string, id_pedido: number, status: string) {
   try {
-    const response = await fetchWithAuth(`${API_URL}/pedido/${id_pedido}`, {
-      method: 'PUT',
+    const response = await fetchWithAuth(`${API_URL}/pedido/${id_pedido}/status`, {
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ status }),
     });

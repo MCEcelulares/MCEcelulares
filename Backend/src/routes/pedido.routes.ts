@@ -4,21 +4,30 @@ import { validate } from "../middlewares/validate.middleware";
 import {
   createPedidoSchema,
   updatePedidoSchema,
+  updateStatusPedidoSchema,
 } from "../validators/pedido.validator";
 import authMiddleware from "../middlewares/auth.middleware";
-import adminMiddleware from "../middlewares/admin.middleware";
+import { checarPermissao } from "../middlewares/permissao.middleware";
 
 const router = Router();
 
 router.get("/", authMiddleware, PedidoController.findAll);
 
-router.post("/", authMiddleware, validate(createPedidoSchema), PedidoController.create);
+router.post("/", authMiddleware, checarPermissao("realizar_compra"), validate(createPedidoSchema), PedidoController.create);
 
 router.get("/:id", authMiddleware, PedidoController.findById);
 
-router.put("/:id", authMiddleware, adminMiddleware, validate(updatePedidoSchema), PedidoController.update);
+router.patch(
+  "/:id/status",
+  authMiddleware,
+  checarPermissao("editar_status_pedido"),
+  validate(updateStatusPedidoSchema),
+  PedidoController.updateStatus,
+);
 
-router.delete("/:id", authMiddleware, adminMiddleware, PedidoController.delete);
+router.put("/:id", authMiddleware, checarPermissao("gerenciar_pedido"), validate(updatePedidoSchema), PedidoController.update);
+
+router.delete("/:id", authMiddleware, checarPermissao("excluir_pedido"), PedidoController.delete);
 
 router.post("/:id/checkout", authMiddleware, PedidoController.criarCheckout);
 

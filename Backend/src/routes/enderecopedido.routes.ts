@@ -2,34 +2,18 @@ import { Router } from "express";
 import EnderecoPedidoController from "../controllers/enderecopedido.controllers";
 import { validate } from "../middlewares/validate.middleware";
 import {
-    createEnderecoPedidoSchema,
-    updateEnderecoPedidoSchema,
+  createEnderecoPedidoSchema,
+  updateEnderecoPedidoSchema,
 } from "../validators/enderecoPedido.validator";
 import authMiddleware from "../middlewares/auth.middleware";
-import adminMiddleware from "../middlewares/admin.middleware";
+import { checarPermissao } from "../middlewares/permissao.middleware";
 
 const router = Router();
 
-router.get("/", authMiddleware, adminMiddleware, EnderecoPedidoController.findAll);
-
-router.post(
-    "/",
-    authMiddleware,
-    adminMiddleware,
-    validate(createEnderecoPedidoSchema),
-    EnderecoPedidoController.create,
-);
-
-router.get("/:id", authMiddleware, EnderecoPedidoController.findById);
-
-router.put(
-    "/:id",
-    authMiddleware,
-    adminMiddleware,
-    validate(updateEnderecoPedidoSchema),
-    EnderecoPedidoController.update,
-);
-
-router.delete("/:id", authMiddleware, adminMiddleware, EnderecoPedidoController.delete);
+router.get("/", authMiddleware, checarPermissao("gerenciar_pedido"), EnderecoPedidoController.findAll);
+router.post("/", authMiddleware, checarPermissao("gerenciar_pedido"), validate(createEnderecoPedidoSchema), EnderecoPedidoController.create);
+router.get("/:id", authMiddleware, checarPermissao("gerenciar_pedido"), EnderecoPedidoController.findById);
+router.put("/:id", authMiddleware, checarPermissao("gerenciar_pedido"), validate(updateEnderecoPedidoSchema), EnderecoPedidoController.update);
+router.delete("/:id", authMiddleware, checarPermissao("gerenciar_pedido"), EnderecoPedidoController.delete);
 
 export default router;

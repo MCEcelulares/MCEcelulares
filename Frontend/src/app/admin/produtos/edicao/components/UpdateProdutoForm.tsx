@@ -13,11 +13,14 @@ import { MarcaDropdownAdm } from '../../cadastro/components/MarcaDropdownAdm';
 import Image from 'next/image';
 import { validarImagem } from '@/src/lib/validarImagem';
 import { getImagemUrl } from '@/src/lib/getImagemUrl';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const UpdateProdutoForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const id = Number(searchParams.get('id'));
+  const { hasPermissao } = useAuth();
 
   const { execute: fetchProduto, produto, loading } = useGetProduto();
   const { execute: updateProduto, loading: atualizando } = useUpdateProduto();
@@ -97,19 +100,23 @@ export const UpdateProdutoForm = () => {
             </h2>
             {!loading && produto && (
               <div className="flex items-center gap-3">
-                <Button
-                  icon={editando ? 'faXmark' : 'faPen'}
-                  onClick={() => setEditando(!editando)}
-                  className="text-purple-700 hover:opacity-75 transition-opacity"
-                  data-testid="btn-editar-produto"
-                />
-                <Button
-                  icon="faTrash"
-                  onClick={handleDelete}
-                  disabled={excluindo}
-                  className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
-                  data-testid="btn-excluir-produto"
-                />
+                {hasPermissao(PERMISSOES.EDITAR_PRODUTO) && (
+                  <Button
+                    icon={editando ? 'faXmark' : 'faPen'}
+                    onClick={() => setEditando(!editando)}
+                    className="text-purple-700 hover:opacity-75 transition-opacity"
+                    data-testid="btn-editar-produto"
+                  />
+                )}
+                {hasPermissao(PERMISSOES.EXCLUIR_PRODUTO) && (
+                  <Button
+                    icon="faTrash"
+                    onClick={handleDelete}
+                    disabled={excluindo}
+                    className="text-[#ff5c8a] hover:opacity-75 transition-opacity disabled:opacity-50"
+                    data-testid="btn-excluir-produto"
+                  />
+                )}
                 <button
                   type="button"
                   onClick={() => router.back()}
@@ -316,7 +323,7 @@ export const UpdateProdutoForm = () => {
                   height={128}
                   className="mt-2 h-32 object-contain rounded-2xl bg-white p-2"
                   unoptimized
-                />  
+                />
               </div>
             </div>
           )}

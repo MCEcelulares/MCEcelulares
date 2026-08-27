@@ -6,6 +6,7 @@ import { tratarSenha } from "../utils/tratarSenha";
 import { obterPaginacao } from "../utils/paginacao";
 import { fazerPaginacaoResponse } from "../utils/paginacaoResponse";
 import { emailNaoPodeAlterar } from "../utils/emailNaoPodeAlterar";
+import Cargo from "../models/Cargo";
 
 interface AuthRequest extends Request {
   userId?: number;
@@ -18,6 +19,7 @@ class UsuarioController {
       const { page, limit, offset } = obterPaginacao(req.query);
       const { count, rows } = await Usuario.findAndCountAll({
         attributes: { exclude: ["senha"] },
+        include: ["cargos"],
         limit,
         offset,
         order: [["id_usuario", "ASC"]],
@@ -32,7 +34,7 @@ class UsuarioController {
     try {
       const usuario = await findByIdOuErroUsuario(req.userId!, {
         attributes: { exclude: ["senha"] },
-        include: ["enderecos"],
+        include: ["enderecos", "cargos"],
       });
       return res.status(200).json(usuario);
     } catch (error) {
@@ -42,9 +44,16 @@ class UsuarioController {
 
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const { nome, email, senha, cpf, telefone, ativo = true, admin = false } = req.body;
+      const { nome, email, senha, cpf, telefone, ativo = true } = req.body;
       const senhaHash = await hashSenha(senha);
-      await Usuario.create({ nome, email, senha: senhaHash, cpf, telefone, ativo, admin });
+
+      const usuario = await Usuario.create({ nome, email, senha: senhaHash, cpf, telefone, ativo });
+
+      const cargoUsuario = await Cargo.findOne({ where: { nome: "usuario" } });
+      if (cargoUsuario) {
+        await (usuario as any).setCargos([cargoUsuario]);
+      }
+
       return res.status(201).json({ message: "Usuário criado com sucesso" });
     } catch (error) {
       next(error);

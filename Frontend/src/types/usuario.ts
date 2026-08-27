@@ -1,3 +1,8 @@
+type CargoType = {
+  id_cargo: number;
+  nome: string;
+}
+
 type UsuarioType = {
     id_usuario: number;
     nome: string;
@@ -5,8 +10,8 @@ type UsuarioType = {
     cpf: string;
     telefone: string;
     ativo: boolean;
-    admin: boolean;
     enderecos?: EnderecoType[];
+    cargos?: CargoType[];
 }
 
 type EnderecoType = {

@@ -12,8 +12,10 @@ class AuthController {
 
       if (!usuario) throw new HttpError(401, "Email ou senha inválidos");
 
+      const permissoes = AuthService.obterPermissoes(usuario);
+
       const token = jwt.sign(
-        { id_usuario: usuario.get("id_usuario"), admin: usuario.get("admin") },
+        { id_usuario: usuario.get("id_usuario"), permissoes },
         process.env.JWT_SECRET as string,
         { expiresIn: "1d" }
       );
@@ -21,10 +23,9 @@ class AuthController {
       return res.status(200).json({
         id_usuario: usuario.id_usuario,
         nome: usuario.nome,
-        admin: usuario.admin,
-        token
+        permissoes,
+        token,
       });
-
     } catch (error) {
       next(error);
     }

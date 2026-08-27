@@ -14,7 +14,7 @@ export const useLogin = () => {
 
       if (!data.success) throw new Error(data.error);
 
-      login(data.token!, data.id_usuario!, data.nome!, data.admin!);
+      login(data.token!, data.id_usuario!, data.nome!, data.permissoes ?? []);
 
       return { success: true };
     } catch (error) {

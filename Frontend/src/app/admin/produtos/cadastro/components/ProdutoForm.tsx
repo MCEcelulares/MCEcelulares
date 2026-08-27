@@ -22,7 +22,6 @@ export const ProdutoForm = () => {
     const [idCategoria, setIdCategoria] = useState<string>('');
     const [idMarca, setIdMarca] = useState<string>('');
 
-    // Libera a URL de preview local ao trocar de imagem/desmontar o form
     useEffect(() => {
         return () => {
             if (previewUrl.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
@@ -45,9 +44,6 @@ export const ProdutoForm = () => {
     };
 
     const handleSubmit = async (formData: FormData) => {
-        // Se nenhum arquivo novo foi selecionado, o input "imagem" ainda vem
-        // no FormData como um File vazio (tamanho 0) — removemos pra deixar
-        // o backend aplicar a imagem padrão.
         const imagem = formData.get('imagem') as File | null;
         if (!imagem || imagem.size === 0) {
             formData.delete('imagem');
@@ -133,7 +129,6 @@ export const ProdutoForm = () => {
 
                 <div>
                     {previewUrl !== IMAGEM_PADRAO_URL && (
-                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-xl mb-2" />
                     )}
                     <input

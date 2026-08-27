@@ -3,9 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/src/components/layout/Icon';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { PERMISSOES } from '@/src/lib/permissoes';
 
 export const AdminSidebar = () => {
   const pathname = usePathname();
+  const { hasPermissao } = useAuth();
 
   const linkClass = (href: string) => {
     const isActive = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
@@ -21,35 +24,47 @@ export const AdminSidebar = () => {
       </div>
 
       <nav className="flex flex-col gap-1 p-4 flex-1">
-        <Link href="/admin" className={linkClass('/admin')}>
-          <Icon name="faChartBar" className="w-4" />
-          Dashboard
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_DASHBOARD) && (
+          <Link href="/admin" className={linkClass('/admin')}>
+            <Icon name="faChartBar" className="w-4" />
+            Dashboard
+          </Link>
+        )}
 
-        <Link href="/admin/produtos" className={linkClass('/admin/produtos')} data-testid="produto-button">
-          <Icon name="faMobileScreen" className="w-4" />
-          Produtos
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_PRODUTO) && (
+          <Link href="/admin/produtos" className={linkClass('/admin/produtos')} data-testid="produto-button">
+            <Icon name="faMobileScreen" className="w-4" />
+            Produtos
+          </Link>
+        )}
 
-        <Link href="/admin/categorias" className={linkClass('/admin/categorias')}>
-          <Icon name="faTag" className="w-4" />
-          Categorias
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_CATEGORIA) && (
+          <Link href="/admin/categorias" className={linkClass('/admin/categorias')}>
+            <Icon name="faTag" className="w-4" />
+            Categorias
+          </Link>
+        )}
 
-        <Link href="/admin/marcas" className={linkClass('/admin/marcas')} data-testid="marca-button">
-          <Icon name="faStar" className="w-4" />
-          Marcas
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_MARCA) && (
+          <Link href="/admin/marcas" className={linkClass('/admin/marcas')} data-testid="marca-button">
+            <Icon name="faStar" className="w-4" />
+            Marcas
+          </Link>
+        )}
 
-        <Link href="/admin/pedidos" className={linkClass('/admin/pedidos')}>
-          <Icon name="faBox" className="w-4" />
-          Pedidos
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_PEDIDO) && (
+          <Link href="/admin/pedidos" className={linkClass('/admin/pedidos')}>
+            <Icon name="faBox" className="w-4" />
+            Pedidos
+          </Link>
+        )}
 
-        <Link href="/admin/usuarios" className={linkClass('/admin/usuarios')}>
-          <Icon name="faUsers" className="w-4" />
-          Usuários
-        </Link>
+        {hasPermissao(PERMISSOES.VISUALIZAR_USUARIO) && (
+          <Link href="/admin/usuarios" className={linkClass('/admin/usuarios')}>
+            <Icon name="faUsers" className="w-4" />
+            Usuários
+          </Link>
+        )}
 
         <Link
           href="/"
@@ -61,4 +76,4 @@ export const AdminSidebar = () => {
       </nav>
     </aside>
   );
-};
+};  

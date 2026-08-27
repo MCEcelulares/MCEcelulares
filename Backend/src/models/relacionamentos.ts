@@ -10,6 +10,10 @@ import ItemPedido from "./ItemPedido";
 import Pagamento from "./Pagamento";
 import EnderecoPedido from "./Endereco_pedido";
 import UsuarioPedido from "./Usuario_pedido";
+import Cargo from "./Cargo";
+import Permissao from "./Permissao";
+import UsuarioCargo from "./UsuarioCargo";
+import CargoPermissao from "./CargoPermissao";
 
 export function estabelecerRelacoes() {
     Categoria.hasMany(Produto, { foreignKey: "id_categoria", as: "produtos" });
@@ -36,9 +40,35 @@ export function estabelecerRelacoes() {
     Pedido.hasOne(EnderecoPedido, { foreignKey: "id_pedido", as: "enderecoPedido" });
     EnderecoPedido.belongsTo(Pedido, { foreignKey: "id_pedido", as: "pedido" });
 
-    Pedido.hasOne(UsuarioPedido, { foreignKey: "id_pedido", as: "usuarioPedido" }); // ← NOVO
+    Pedido.hasOne(UsuarioPedido, { foreignKey: "id_pedido", as: "usuarioPedido" });
     UsuarioPedido.belongsTo(Pedido, { foreignKey: "id_pedido", as: "pedido" });
 
     ItemPedido.belongsTo(Pedido, { foreignKey: "id_pedido", as: "pedido" });
     Pagamento.belongsTo(Pedido, { foreignKey: "id_pedido", as: "pedido" });
+
+    Usuario.belongsToMany(Cargo, {
+        through: UsuarioCargo,
+        foreignKey: "id_usuario",
+        otherKey: "id_cargo",
+        as: "cargos"
+    });
+    Cargo.belongsToMany(Usuario, {
+        through: UsuarioCargo,
+        foreignKey: "id_cargo",
+        otherKey: "id_usuario",
+        as: "usuarios"
+    });
+
+    Cargo.belongsToMany(Permissao, {
+        through: CargoPermissao,
+        foreignKey: "id_cargo",
+        otherKey: "id_permissao",
+        as: "permissoes"
+    });
+    Permissao.belongsToMany(Cargo, {
+        through: CargoPermissao,
+        foreignKey: "id_permissao",
+        otherKey: "id_cargo",
+        as: "cargos"
+    });
 }
