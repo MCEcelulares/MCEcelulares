@@ -1,10 +1,12 @@
 import UsuarioController from "../../src/controllers/usuario.controllers";
 import Usuario from "../../src/models/Usuario";
+import Cargo from "../../src/models/Cargo";
 import bcrypt from "bcrypt";
 import { mockRequest, mockResponse } from "../test.helpers";
 import { HttpError } from "../../src/types/http_error";
 
 jest.mock("../../src/models/Usuario");
+jest.mock("../../src/models/Cargo");
 jest.mock("bcrypt");
 
 describe("UsuarioController - findAll", () => {
@@ -73,7 +75,7 @@ describe("UsuarioController - findById", () => {
 
     expect(Usuario.findByPk).toHaveBeenCalledWith(1, {
       attributes: { exclude: ["senha"] },
-      include: ["enderecos"],
+      include: ["enderecos", "cargos"],
     });
 
     expect(res.status).toHaveBeenCalledWith(200);
@@ -123,6 +125,7 @@ describe("UsuarioController - create", () => {
       id_usuario: 1,
       ...req.body,
       senha: "hashed_password",
+      setCargos: jest.fn().mockResolvedValue(true),
       toJSON: jest.fn().mockReturnValue({
         id_usuario: 1,
         nome: "Novo Usuário",
@@ -132,6 +135,7 @@ describe("UsuarioController - create", () => {
     };
 
     (Usuario.create as jest.Mock).mockResolvedValue(mockUsuarioCriado);
+    (Cargo.findOne as jest.Mock).mockResolvedValue({ id_cargo: 1, nome: "usuario" });
 
     await UsuarioController.create(req as any, res as any, next);
 
