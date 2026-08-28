@@ -19,6 +19,22 @@ export async function createPedidoAPI(token: string, body: { id_endereco: number
   }
 }
 
+export async function createCheckoutAPI(token: string, id_pedido: number) {
+  try {
+    const response = await fetchWithAuth(`${API_URL}/pedido/${id_pedido}/checkout`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message);
+
+    return { success: true, checkoutUrl: data.checkout_url as string };
+  } catch (error) {
+    return { success: false, error: (error as Error).message || "Servidor indisponível no momento." };
+  }
+}
+
 export async function getPedidosAPI(
   token: string,
   params: { page: number; limit?: number; status?: string; id_usuario?: number } = { page: 1 }
