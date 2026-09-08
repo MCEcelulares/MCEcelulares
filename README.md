@@ -53,7 +53,8 @@ Por fim, a terceira versão adicionou um meio de pagamento integrado, aplicativo
 Essa evolução demonstra que o produto não foi desenvolvido apenas com o objetivo de criar uma loja virtual, mas como uma solução progressiva para reduzir a dependência do atendimento manual, facilitar o acesso às informações dos produtos e tornar o processo de compra mais simples para os clientes.
 
 **Diagrama Entidade Relacionamento:**  
- 
+
+<img width="1000" height="644" alt="image" src="https://github.com/user-attachments/assets/25ccf294-3a77-4c97-9576-15169f2dd19a" />
 
 **Requisitos funcionais:**  
  **1)	Autenticação e Usuários**  
