@@ -168,7 +168,7 @@ RF 50.	O aplicativo móvel deve possuir um menu vertical retrátil (Drawer) para
 
 RF 51.	O aplicativo móvel deve abrir os links de contato nos apps nativos correspondentes (WhatsApp e Instagram).
 
-**Requisitos não funcionais:**
+**Requisitos não funcionais:**  
 **1)	 Segurança**  
 RNF 1.	O sistema deve armazenar senhas de forma criptografada (hash)
 
@@ -191,7 +191,7 @@ RNF 9.	O sistema deve ser containerizado para facilitar escalabilidade e deploy
 
 RNF 10.	O banco de dados deve possuir verificação de saúde (healthcheck) antes de disponibilizar o backend
 
-**3)	 Confiabilidade e Disponibilidade**
+**3)	 Confiabilidade e Disponibilidade**  
 RNF 11.	 O backend deve expor um endpoint de healthcheck para monitoramento
 
 RNF 12.	 O sistema deve reiniciar automaticamente serviços críticos em caso de falha (restart policy no MySQL)
@@ -236,43 +236,33 @@ RNF 27.	O aplicativo móvel deve apresentar um design responsivo e adaptado para
 **1. Diagrama de Casos de Uso: Processo de Compra pelo Cliente**  
 Este diagrama descreve as interações de um Cliente com o sistema de e-commerce.
 
-<img width="921" height="861" alt="image" src="https://github.com/user-attachments/assets/381c5db5-f795-4f75-9eb3-d5f681ab2e5b" />
-
- 
+<img width="921" height="861" alt="image" src="https://github.com/user-attachments/assets/381c5db5-f795-4f75-9eb3-d5f681ab2e5b" />  
 
 **2. Diagrama de Casos de Uso:**  
 **Gestão de Produtos**
 Este diagrama descreve como o Administrador gerencia os produtos e o estoque.
 
- <img width="921" height="558" alt="image" src="https://github.com/user-attachments/assets/eedf729c-347a-4c6c-8b93-4f5ef6cccf32" />
-
-
+ <img width="921" height="558" alt="image" src="https://github.com/user-attachments/assets/eedf729c-347a-4c6c-8b93-4f5ef6cccf32" />  
+ 
 **Diagramas de atividades:**  
 **1. Diagrama de Atividades: Processamento de Compra (Checkout)**  
 Este fluxograma representa as regras de negócio durante o processo de compra do cliente, sem cálculo de frete.
 
- 
-<img width="488" height="935" alt="image" src="https://github.com/user-attachments/assets/74645113-8151-4278-9a4e-d0ba43156504" />
-
-
+<img width="488" height="935" alt="image" src="https://github.com/user-attachments/assets/74645113-8151-4278-9a4e-d0ba43156504" />  
 
 **2. Diagrama de Atividades:**  
 **Fluxo de Cadastro de Celular pelo Admin**  
 Este fluxograma mostra as etapas e verificações para cadastrar um novo produto.
 
- <img width="483" height="903" alt="image" src="https://github.com/user-attachments/assets/7c0b5e1c-4ff1-4234-a6dc-79cd08be6891" />
-
-
+ <img width="483" height="903" alt="image" src="https://github.com/user-attachments/assets/7c0b5e1c-4ff1-4234-a6dc-79cd08be6891" />  
+ 
 **Diagramas de sequência:**  
 **1. Diagrama de Sequência: Autenticação de Usuário (Login)**  
 Este diagrama representa o fluxo de mensagens e ações durante o login de um cliente no sistema.
 
- <img width="921" height="676" alt="image" src="https://github.com/user-attachments/assets/b6235605-a0aa-4076-a9d2-cad78d31c9d2" />
-
-
+ <img width="921" height="676" alt="image" src="https://github.com/user-attachments/assets/b6235605-a0aa-4076-a9d2-cad78d31c9d2" />  
+ 
 **2. Diagrama de Sequência: Adição ao Carrinho e Busca de Produtos**
 Este diagrama ilustra o fluxo de visualização do catálogo e adição de um celular ao carrinho.
 
- <img width="921" height="588" alt="image" src="https://github.com/user-attachments/assets/4a46c697-f4b5-4b02-92e0-cd7ab8910390" />
-
- 
+ <img width="921" height="588" alt="image" src="https://github.com/user-attachments/assets/4a46c697-f4b5-4b02-92e0-cd7ab8910390" />  
