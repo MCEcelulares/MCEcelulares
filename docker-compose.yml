@@ -27,6 +27,7 @@ services:
     volumes:
       - ./Backend:/app
       - /app/node_modules
+      - backend_uploads:/app/src/uploads
 
     command: npm run dev
 
@@ -93,6 +94,7 @@ services:
 
 volumes:
   mysql_data:
+  backend_uploads:
 
 networks:
   app_network:
