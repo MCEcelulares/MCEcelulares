@@ -1,4 +1,4 @@
 node_modules
 .env
 config/
-src/uploads/*
+src/uploads/
