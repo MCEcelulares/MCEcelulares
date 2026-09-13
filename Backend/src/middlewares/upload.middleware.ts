@@ -2,6 +2,7 @@ import multer, { FileFilterCallback } from "multer";
 import { Request } from "express";
 import path from "path";
 import fs from "fs";
+import { HttpError } from "../types/http_error";
 
 const uploadsDir = path.join(__dirname, "..", "uploads");
 
@@ -18,11 +19,10 @@ const fileFilter = (
   cb: FileFilterCallback
 ) => {
   const fileExtension = path.extname(file.originalname).toLowerCase();
-
   if (allowedMimeTypes.includes(file.mimetype) && allowedExtensions.includes(fileExtension)) {
     cb(null, true);
   } else {
-    cb(new Error("Tipo de arquivo não permitido. Apenas imagens são aceitas (JPEG, PNG, GIF, WebP)."));
+    cb(new HttpError(400, "Tipo de arquivo não permitido. Apenas imagens são aceitas (JPEG, PNG, GIF, WebP)."));
   }
 };
 
