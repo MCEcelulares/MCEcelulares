@@ -50,9 +50,10 @@ class UsuarioController {
       const usuario = await Usuario.create({ nome, email, senha: senhaHash, cpf, telefone, ativo });
 
       const cargoUsuario = await Cargo.findOne({ where: { nome: "usuario" } });
-      if (cargoUsuario) {
-        await (usuario as any).setCargos([cargoUsuario]);
+      if (!cargoUsuario) {
+        throw new Error("Cargo padrão 'usuario' não encontrado no banco de dados");
       }
+      await (usuario as any).setCargos([cargoUsuario]);
 
       return res.status(201).json({ message: "Usuário criado com sucesso" });
     } catch (error) {
