@@ -1,7 +1,16 @@
 import { ReactNode } from "react";
+import { Metadata } from "next";
 // @ts-ignore
 import "./globals.css";
 import { AuthProvider } from "../contexts/AuthContext";
+
+export const metadata: Metadata = {
+  title: "MCE Celulares",
+  description: "MCE Celulares",
+  icons: {
+    icon: "/img/icon-mcecelulares.png"
+  },
+};
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
