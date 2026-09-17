@@ -12,7 +12,9 @@ export const CarrinhoList = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/carrinho/checkout");
+    // Usa replace para que a página do carrinho não fique no histórico,
+    // impedindo o retorno a ela após o pedido ser finalizado.
+    router.replace("/carrinho/checkout");
   };
 
   useEffect(() => { fetchCarrinho() }, [fetchCarrinho]);
