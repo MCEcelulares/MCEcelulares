@@ -1,11 +1,13 @@
 import { createCheckoutAPI } from '@/src/actions/pedido';
 import { useAuth } from '@/src/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 import Swal from 'sweetalert2';
 
 export const useCreateCheckout = () => {
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
+  const router = useRouter();
 
   const execute = useCallback(async (id_pedido: number) => {
     setLoading(true);
@@ -14,7 +16,10 @@ export const useCreateCheckout = () => {
 
       if (!data.success) throw new Error(data.error);
 
-      window.location.assign(data.checkoutUrl);
+      // Usa replace para que a página de checkout não fique no histórico,
+      // impedindo o retorno a ela após o pedido ser finalizado.
+      router.replace('/pedidos');
+      window.open(data.checkoutUrl, '_blank', 'noopener,noreferrer');
       return { success: true };
     } catch (error) {
       Swal.fire({
@@ -26,7 +31,7 @@ export const useCreateCheckout = () => {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, router]);
 
   return { execute, loading };
 };
