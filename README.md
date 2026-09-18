@@ -250,20 +250,24 @@ Este diagrama descreve como o Administrador gerencia os produtos e o estoque.
 ## **1. Diagrama de Atividades: Processamento de Compra (Checkout)**  
 Este fluxograma representa as regras de negócio durante o processo de compra do cliente, sem cálculo de frete.
 
-<img width="488" height="935" alt="image" src="https://github.com/user-attachments/assets/74645113-8151-4278-9a4e-d0ba43156504" />  
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/91a64f75-9c74-4df0-ad9a-d8ab5f30a77c" />
+
 
 ## **2. Diagrama de Atividades: Fluxo de Cadastro de Celular pelo Admin**  
 Este fluxograma mostra as etapas e verificações para cadastrar um novo produto.
 
- <img width="483" height="903" alt="image" src="https://github.com/user-attachments/assets/7c0b5e1c-4ff1-4234-a6dc-79cd08be6891" />  
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0fe09791-3169-4663-aa25-9a1bb8a6e19b" />
+
  
 # **Diagramas de Sequência:**  
 ## **1. Diagrama de Sequência: Autenticação de Usuário (Login)**  
 Este diagrama representa o fluxo de mensagens e ações durante o login de um cliente no sistema.
 
- <img width="921" height="676" alt="image" src="https://github.com/user-attachments/assets/b6235605-a0aa-4076-a9d2-cad78d31c9d2" />  
+<img width="1464" height="1074" alt="image" src="https://github.com/user-attachments/assets/37480705-fb43-4ccf-bcad-b5de4574d0ab" />
+
  
 ## **2. Diagrama de Sequência: Adição ao Carrinho e Busca de Produtos**
 Este diagrama ilustra o fluxo de visualização do catálogo e adição de um celular ao carrinho.
 
- <img width="921" height="588" alt="image" src="https://github.com/user-attachments/assets/4a46c697-f4b5-4b02-92e0-cd7ab8910390" />  
+<img width="1562" height="1007" alt="image" src="https://github.com/user-attachments/assets/8891e574-afa9-4df5-8dda-b83cead66674" />
+
