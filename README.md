@@ -52,6 +52,15 @@ Por fim, a terceira versão adicionou um meio de pagamento integrado, aplicativo
 
 Essa evolução demonstra que o produto não foi desenvolvido apenas com o objetivo de criar uma loja virtual, mas como uma solução progressiva para reduzir a dependência do atendimento manual, facilitar o acesso às informações dos produtos e tornar o processo de compra mais simples para os clientes.
 
+# **Pontos Futuros**
+
+Para as próximas etapas do projeto, a evolução da plataforma estará centrada no engajamento dos clientes e na eficiência da navegação no site e no aplicativo. Uma das prioridades será a implementação de um sistema flexível de cupons de desconto. Esse recurso permitirá criar campanhas promocionais estratégicas, conceder benefícios para a primeira compra e oferecer incentivos exclusivos para clientes recorrentes de Corbélia e das cidades vizinhas.  
+Junto a isso, a plataforma passará a contar com um assistente virtual baseado em Inteligência Artificial. Essa IA atuará em duas frentes cruciais:    
+  
+ **Suporte ao cliente:**  Responderá a dúvidas frequentes em tempo real, fornecendo informações instantâneas sobre especificações de produtos, opções de entrega e disponibilidade no estoque.  
+   
+ **Busca inteligente:**  Compreenderá buscas em linguagem natural, ajudando o usuário a encontrar exatamente os celulares, acessórios ou jogos desejados de forma rápida, precisa e intuitiva.
+
 # **Diagrama Entidade Relacionamento:**  
 
 <img width="1000" height="644" alt="image" src="https://github.com/user-attachments/assets/25ccf294-3a77-4c97-9576-15169f2dd19a" />
