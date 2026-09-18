@@ -54,7 +54,7 @@ Essa evolução demonstra que o produto não foi desenvolvido apenas com o objet
 
 # **Pontos Futuros**
 
-Para as próximas etapas do projeto, a evolução da plataforma estará centrada no engajamento dos clientes e na eficiência da navegação no site e no aplicativo. Uma das prioridades será a implementação de um sistema flexível de cupons de desconto. Esse recurso permitirá criar campanhas promocionais estratégicas, conceder benefícios para a primeira compra e oferecer incentivos exclusivos para clientes recorrentes de Corbélia e das cidades vizinhas.  
+Para as próximas etapas do projeto, a evolução da plataforma estará centrada no engajamento dos clientes e na eficiência da navegação no site e no aplicativo. Uma das prioridades será a implementação de um sistema flexível de cupons de desconto. Esse recurso permitirá criar campanhas promocionais estratégicas, conceder benefícios para a primeira compra e oferecer incentivos exclusivos para clientes recorrentes de Corbélia e das cidades vizinhas. Outra funcionalidade possível seria a implementação de uma Dashboard para controle de produtos, usuários e pedidos, dentro da versão Mobile.   
 Junto a isso, a plataforma passará a contar com um assistente virtual baseado em Inteligência Artificial. Essa IA atuará em duas frentes cruciais:    
   
  **Suporte ao cliente:**  Responderá a dúvidas frequentes em tempo real, fornecendo informações instantâneas sobre especificações de produtos, opções de entrega e disponibilidade no estoque.  
