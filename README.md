@@ -243,7 +243,8 @@ Este diagrama descreve as interações de um Cliente com o sistema de e-commerce
 ## **2. Diagrama de Casos de Uso: Gestão de Produtos**
 Este diagrama descreve como o Administrador gerencia os produtos e o estoque.
 
- <img width="921" height="558" alt="image" src="https://github.com/user-attachments/assets/eedf729c-347a-4c6c-8b93-4f5ef6cccf32" />  
+<img width="1600" height="968" alt="image" src="https://github.com/user-attachments/assets/6c651d59-058c-4c8c-a7bd-1940ab4ce681" />
+
  
 # **Diagramas de Atividades:**  
 ## **1. Diagrama de Atividades: Processamento de Compra (Checkout)**  
